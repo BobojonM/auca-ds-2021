@@ -5,19 +5,18 @@ int sz(const C &c) { return static_cast<int>(c.size()); }
 
 using namespace std;
 
-long long int cycleLength(long long int x)
+int cycleLength(int x)
 {
-    long long int cnt = 1;
+    int cnt = 1;
     while (x != 1)
     {
+        cnt++;
         if (x % 2 == 1 && x != 1)
         {
-            cnt++;
             x = 3 * x + 1;
         }
         else
         {
-            cnt++;
             x = x / 2;
         }
     }
@@ -28,14 +27,22 @@ int main()
 {
     iostream::sync_with_stdio(false);
 
-    long long i;
-    long long j;
+    int i, tmpi;
+    int j, tmpj;
     while (cin >> i >> j)
     {
-        long long int maxCycle = 0;
-        for (long long int x = i; x <= j; x++)
+        tmpi = i;
+        tmpj = j;
+        if (j < i)
         {
-            long long int cycle = cycleLength(x);
+            tmpi = j;
+            tmpj = i;
+        }
+        int maxCycle = 0;
+
+        for (int x = tmpi; x <= tmpj; x++)
+        {
+            int cycle = cycleLength(x);
             if (cycle > maxCycle)
             {
                 maxCycle = cycle;
