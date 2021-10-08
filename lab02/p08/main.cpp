@@ -34,5 +34,6 @@ int main()
                 cout << ch;
             }
         }
+        cout << "\n";
     }
 }
