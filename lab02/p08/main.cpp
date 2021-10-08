@@ -34,6 +34,6 @@ int main()
                 cout << ch;
             }
         }
-        cout << "\n";
+        cout << endl;
     }
 }
