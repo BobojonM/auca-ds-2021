@@ -14,13 +14,8 @@ int main()
     for (int i = 0; i < n; i++)
     {
         cin >> w;
-        double j = 0;
-        double s = 1;
-        while (s <= w)
-        {
-            j++;
-            s = ((1 + j) / 2) * j;
-        }
-        cout << j - 1 << "\n";
+        double d2 = sqrt(1 + (8 * w));
+        int x1 = (-1 + d2) / 2;
+        cout << x1 << "\n";
     }
 }
