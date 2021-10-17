@@ -20,6 +20,7 @@ int main()
     for (int i = 0; i < n; i++)
         cin >> names[i];
 
-    for (int i = 0; i <= 15; i++)
-        cout << names[(i % 3)] << ": " << text[i] << "\n";
+    int ln = 16 * ceil((double)n / 16);
+    for (int i = 0; i < ln; i++)
+        cout << names[(i % 3)] << ": " << text[i % 16] << "\n";
 }
