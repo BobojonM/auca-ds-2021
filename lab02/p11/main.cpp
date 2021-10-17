@@ -46,6 +46,6 @@ int main()
         int n1 = sumDigits(strToInt(name1));
         int n2 = sumDigits(strToInt(name2));
 
-        cout << fixed << setprecision(2) << ((double)min(n1, n2) / max(n1, n2)) * 100 << "%" << endl;
+        cout << fixed << setprecision(2) << ((double)min(n1, n2) / max(n1, n2)) * 100 << " %" << endl;
     }
 }
