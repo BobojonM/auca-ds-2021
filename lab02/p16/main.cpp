@@ -22,5 +22,5 @@ int main()
 
     int ln = 16 * ceil((double)n / 16);
     for (int i = 0; i < ln; i++)
-        cout << names[(i % 3)] << ": " << text[i % 16] << "\n";
+        cout << names[(i % n)] << ": " << text[i % 16] << "\n";
 }
