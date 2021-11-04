@@ -1,5 +1,6 @@
 #include <iostream>
 #include <utility>
+#include "../../au/algol.hpp"
 
 using namespace std;
 
@@ -20,14 +21,6 @@ void goodSwap01(int *p, int *q)
 void goodSwap02(int &x, int &y)
 {
     int t = x;
-    x = y;
-    y = t;
-}
-
-template <typename T>
-void auSwap(T &x, T &y)
-{
-    T t = x;
     x = y;
     y = t;
 }
