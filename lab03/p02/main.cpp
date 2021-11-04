@@ -9,7 +9,11 @@ vector<vector<char>> readPuzzle(const vector<string> &lines);
 vector<char> readCommands(const vector<string> &lines);
 
 int move(vector<vector<char>> &puzzle, const vector<char> &cmds);
-void printPuzzle(const vector<vector<char>> &puzzle, int puzzleNumber, int error);
+void printPuzzle(const vector<vector<char>> &puzzle, const int &puzzleNumber, const int &error);
+
+const vector<char> dir = {'A', 'B', 'L', 'R'};
+const vector<int> movesX = {-1, 1, 0, 0};
+const vector<int> movesY = {0, 0, -1, 1};
 
 int main()
 {
@@ -46,10 +50,6 @@ int move(vector<vector<char>> &puzzle, const vector<char> &cmds)
         for (int j = 0; j < 5; j++)
             if (puzzle[i][j] == ' ')
                 x = i, y = j;
-
-    static vector<char> dir = {'A', 'B', 'L', 'R'};
-    static vector<int> movesX = {-1, 1, 0, 0};
-    static vector<int> movesY = {0, 0, -1, 1};
 
     while (cmds[ci] != '0' && !error)
     {
@@ -94,10 +94,17 @@ vector<char> readCommands(const vector<string> &lines)
 
     vector<char> result(cmd.begin(), cmd.end());
 
+    for (auto ch : result)
+        if (ch != 'A' && ch != 'B' && ch != 'L' && ch != 'R' && ch != '0')
+        {
+            result = {'R', 'R', 'R', 'R', 'R', 'R'};
+            break;
+        }
+
     return result;
 }
 
-void printPuzzle(const vector<vector<char>> &puzzle, int puzzleNumber, int error)
+void printPuzzle(const vector<vector<char>> &puzzle, const int &puzzleNumber, const int &error)
 {
     cout << "Puzzle #" << puzzleNumber << ":\n";
 
@@ -106,7 +113,7 @@ void printPuzzle(const vector<vector<char>> &puzzle, int puzzleNumber, int error
         {
             for (int i = 0; i < (int)line.size(); i++)
             {
-                if (i != 0)
+                if (i)
                     cout << " ";
                 cout << line[i];
             }
