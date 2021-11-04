@@ -104,8 +104,12 @@ void printPuzzle(const vector<vector<char>> &puzzle, int puzzleNumber, int error
     if (!error)
         for (auto line : puzzle)
         {
-            for (auto ch : line)
-                cout << ch;
+            for (int i = 0; i < (int)line.size(); i++)
+            {
+                if (i != 0)
+                    cout << " ";
+                cout << line[i];
+            }
             cout << "\n";
         }
     else
