@@ -5,120 +5,99 @@ int sz(const C &c) { return static_cast<int>(c.size()); }
 
 using namespace std;
 
-vector<vector<char>> readPuzzle(const vector<string> &lines);
-vector<char> readCommands(const vector<string> &lines);
-
-int move(vector<vector<char>> &puzzle, const vector<char> &cmds);
-void printPuzzle(const vector<vector<char>> &puzzle, const int &puzzleNumber, const int &error);
-
-const vector<char> dir = {'A', 'B', 'L', 'R'};
-const vector<int> movesX = {-1, 1, 0, 0};
-const vector<int> movesY = {0, 0, -1, 1};
+void printPuzzle(const vector<string> &puzzle, const int &puzzleNumber, const bool &error);
+void move(vector<string> &pazzle, bool &valid, int &x, int &y);
+const map<char, int> moveX = {
+    {'A', 0},
+    {'B', 0},
+    {'R', 1},
+    {'L', -1},
+};
+const map<char, int> moveY = {
+    {'A', -1},
+    {'B', 1},
+    {'R', 0},
+    {'L', 0},
+};
 
 int main()
 {
-    iostream::sync_with_stdio(false);
+    vector<string> pazzle(5);
 
-    vector<string> lines;
-    string line;
-
-    int puzzleNumber = 0;
-    while (getline(cin, line) && line != "Z")
+    string lineBlank = "";
+    for (int t = 1;; ++t)
     {
-        lines.push_back(line);
+        int x(-1), y(-1);
 
-        if (line[line.length() - 1] == '0')
+        for (int i = 0; i < 5; ++i)
         {
-            puzzleNumber++;
-            auto puzzle = readPuzzle(lines);
-            auto cmds = readCommands(lines);
+            getline(cin, pazzle[i]);
 
-            int error = move(puzzle, cmds);
-            if (puzzleNumber != 1)
-                cout << "\n";
-            printPuzzle(puzzle, puzzleNumber, error);
-
-            lines.clear();
-        }
-    }
-}
-
-int move(vector<vector<char>> &puzzle, const vector<char> &cmds)
-{
-    int x = 0, y = 0, ci = 0, error = 0;
-    for (int i = 0; i < 5; i++)
-        for (int j = 0; j < 5; j++)
-            if (puzzle[i][j] == ' ')
-                x = i, y = j;
-
-    while (cmds[ci] != '0' && !error)
-    {
-        char cmd = cmds[ci];
-        for (int k = 0; k < 4; k++)
-            if (cmd == dir[k])
+            for (int j = 0; j < 5; ++j)
             {
-                if ((k < 2 ? x : y) == (k % 2 == 0 ? 0 : 4))
+                if (pazzle[i][j] == 'Z')
+                    return 0;
+
+                if (pazzle[i][j] == ' ')
                 {
-                    error = 1;
-                    break;
+                    x = j;
+                    y = i;
                 }
-                puzzle[x][y] = puzzle[x + movesX[k]][y + movesY[k]];
-                x += movesX[k];
-                y += movesY[k];
             }
-        ci++;
-    }
-
-    puzzle[x][y] = ' ';
-    return error;
-}
-
-vector<vector<char>> readPuzzle(const vector<string> &lines)
-{
-    vector<vector<char>> result(5);
-    for (int i = 0; i < 5; ++i)
-    {
-        result[i] = vector<char>(lines[i].begin(), lines[i].end());
-        if (result[i].size() == 4)
-            result[i].push_back(' ');
-    }
-
-    return result;
-}
-
-vector<char> readCommands(const vector<string> &lines)
-{
-    string cmd = "";
-    for (int i = 5; i < (int)lines.size(); ++i)
-        cmd += lines[i];
-
-    vector<char> result(cmd.begin(), cmd.end());
-
-    for (auto ch : result)
-        if (ch != 'A' && ch != 'B' && ch != 'L' && ch != 'R' && ch != '0')
-        {
-            result = {'R', 'R', 'R', 'R', 'R', 'R'};
-            break;
         }
 
-    return result;
+        cout << lineBlank;
+        lineBlank = '\n';
+
+        bool valid(true);
+        move(pazzle, valid, x, y);
+        printPuzzle(pazzle, t, valid);
+    }
 }
 
-void printPuzzle(const vector<vector<char>> &puzzle, const int &puzzleNumber, const int &error)
+void move(vector<string> &pazzle, bool &valid, int &x, int &y)
+{
+    char move;
+
+    while (cin >> move && move != '0')
+    {
+        int nX(x + moveX.at(move)), nY(y + moveY.at(move));
+
+        if (nX < 0 || nX >= 5 || nY < 0 || nY >= 5)
+            valid = false;
+
+        if (valid)
+        {
+            swap(pazzle[nY][nX], pazzle[y][x]);
+            x = nX;
+            y = nY;
+        }
+
+        cin >> move;
+    }
+}
+
+void printPuzzle(const vector<string> &pazzle, const int &puzzleNumber, const bool &valid)
 {
     cout << "Puzzle #" << puzzleNumber << ":\n";
 
-    if (!error)
-        for (auto line : puzzle)
+    if (valid)
+    {
+        for (int y = 0; y < 5; ++y)
         {
-            for (int i = 0; i < (int)line.size(); i++)
+            string space = "";
+            for (int x = 0; x < 5; ++x)
             {
-                if (i)
-                    cout << " ";
-                cout << line[i];
+                cout << space << pazzle[y][x];
+                space = " ";
             }
-            cout << "\n";
+
+            cout << '\n';
         }
+    }
+
     else
         cout << "This puzzle has no final configuration.\n";
+
+    cin.ignore();
 }
