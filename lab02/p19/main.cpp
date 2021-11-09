@@ -16,7 +16,9 @@ int main()
     while (t--)
     {
         getline(cin, line);
-        if (count(line.begin(), line.end(), 'M') == count(line.begin(), line.end(), 'F'))
+        int male = count(line.begin(), line.end(), 'M');
+        int female = count(line.begin(), line.end(), 'F');
+        if (male == female && (male > 1 && female > 1))
         {
             cout << "LOOP\n";
         }
