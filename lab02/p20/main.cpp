@@ -29,9 +29,10 @@ int main()
             db[name] -= sum;
 
             if (g)
+            {
                 a = sum / g;
-            if (a)
                 db[name] += sum - (a * g);
+            }
 
             for (int j = 0; j < g; j++)
             {
