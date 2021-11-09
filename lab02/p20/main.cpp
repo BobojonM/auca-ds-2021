@@ -27,18 +27,15 @@ int main()
         {
             int a = 0;
             cin >> name >> sum >> g;
-            db[name] -= sum;
 
             if (g)
-            {
                 a = sum / g;
-                db[name] += sum - (a * g);
-            }
 
             for (int j = 0; j < g; j++)
             {
                 cin >> gName;
                 db[gName] += a;
+                db[name] -= a;
             }
         }
 
