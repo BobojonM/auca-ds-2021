@@ -22,9 +22,10 @@ int main()
         for (int i = 0; i < t; i++)
             cin >> names[i];
 
-        int sum, g, a = 0;
+        int sum, g;
         for (int i = 0; i < t; i++)
         {
+            int a = 0;
             cin >> name >> sum >> g;
             db[name] -= sum;
 
