@@ -20,16 +20,16 @@ int main()
         cin >> d >> k >> names;
 
         vector<char> mp;
-        for (int i = 0; i < d; i++)
+        for (int i = 0; i < d - 1; i++)
         {
-            if (i % k == 0 && !mp.empty())
+            if ((i + 1) % k == 0 && !mp.empty())
                 mp.erase(mp.begin());
+            mp.push_back(names[i]);
 
-            if (find(mp.begin(), mp.end(), names[i]) != mp.end())
+            if (find(mp.begin(), mp.end(), names[i + 1]) != mp.end())
             {
                 res++;
             }
-            mp.push_back(names[i]);
         }
 
         cout << "Case " << c << ": " << res << "\n";
