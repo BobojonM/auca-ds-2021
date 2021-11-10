@@ -28,6 +28,7 @@ int main()
                 i++;
             }
             tr[i] = bins;
+            sort(tr.begin(), tr.end());
             ct.push_back(tr);
         }
         else
@@ -41,7 +42,7 @@ int main()
                         if (ct[i][k] != ct[j][k])
                             d++;
 
-                if (mn >= d)
+                if (mn > d)
                 {
                     mn = d;
                     mni = i + 1;
