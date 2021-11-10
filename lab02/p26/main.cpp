@@ -24,9 +24,11 @@ int main()
             cin >> vm[i];
 
         vector<double> d;
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < m; j++)
-                d.push_back((double)vm[j] / vn[i]);
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                d.push_back((double)vm[i] / (double)vn[j]);
+
+        sort(d.begin(), d.end());
 
         double res = 0;
         for (size_t i = 0; i < d.size() - 1; i++)
