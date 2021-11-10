@@ -4,6 +4,8 @@
         "map": "cpp",
         "future": "cpp",
         "sstream": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "bitset": "cpp",
+        "string_view": "cpp"
     }
 }
