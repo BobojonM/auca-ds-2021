@@ -19,8 +19,16 @@ int main()
         for (int i = 0; i < r; i++)
             cin >> st[i];
 
-        sort(st.begin(), st.end());
+        unsigned int mn = 500 * 500 * 3000;
+        for (int i = 0; i < r; i++)
+        {
+            unsigned int sum = 0;
+            for (int j = 0; j < r; j++)
+                if (i != j)
+                    sum += abs(st[i] - st[j]);
+            mn = min(mn, sum);
+        }
 
-        cout << st[ceil((double)r / 2) - 1] << "\n";
+        cout << mn << "\n";
     }
 }
