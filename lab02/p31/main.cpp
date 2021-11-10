@@ -25,13 +25,13 @@ int main()
     {
         int sum = 0;
         for (int i = 1; i * i <= v; i++)
-            if (v % i == 0)
+            if (v % i == 0 && v != 1)
             {
                 sum += i;
                 sum += (v / i != i && i != 1) ? (v / i) : 0;
             }
 
-        cout << setw(to_string(mx).length()) << v << " ";
+        cout << setw(to_string(mx).length()) << v << "  ";
         if (sum == v)
             cout << "PERFECT\n";
         else if (sum < v)
