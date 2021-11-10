@@ -12,20 +12,23 @@ int main()
     string s1, s2;
     while (cin >> s1 >> s2)
     {
-        int sz = s1.size() + s2.size();
+        int l1 = s1.size(), l2 = s2.size();
+        int sz = l1 + l2;
+        int mn = sz;
         vector<int> vs1(sz);
-        vector<int> vs2(s2.size());
+        vector<int> vs2(sz);
+
         for (size_t i = 0; i < s1.size(); ++i)
             vs1[i] = s1[i] - '0';
         for (size_t i = 0; i < s2.size(); ++i)
-            vs2[i] = s2[i] - '0';
+            vs2[(sz - 1) - (s2.size() - 1 - i)] = s2[i] - '0';
 
-        for (size_t i = 0; i <= s1.size(); ++i)
+        for (int i = 1; i <= sz; ++i)
         {
             int t = 1;
-            for (size_t j = 0; j < s2.size(); ++j)
+            for (int j = 0; j < i; ++j)
             {
-                if (vs1[j + i] + vs2[j] > 3)
+                if (vs1[j] + vs2[sz - 1 - ((i - 1) - j)] > 3)
                 {
                     t = 0;
                     break;
@@ -33,10 +36,9 @@ int main()
             }
 
             if (t)
-            {
-                cout << max(s1.size(), i + (int)s2.size()) << endl;
-                break;
-            }
+                mn = min(mn, l2 + ((i - l2) > 0 ? (i - l2) : 0) - ((i - l1) < 0 ? (i - l1) : 0));
         }
+
+        cout << mn << "\n";
     }
 }
