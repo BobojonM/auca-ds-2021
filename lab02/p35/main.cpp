@@ -18,6 +18,6 @@ int main()
             cout << " ";
         for (int j = 0; j < (int)word.length(); j++)
             cout << keyboard[(find(keyboard.begin(), keyboard.end(), tolower(word[j])) - keyboard.begin()) - 2];
-        cout << "\n";
     }
+    cout << "\n";
 }
