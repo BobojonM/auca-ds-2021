@@ -41,7 +41,7 @@ int main()
                         if (ct[i][k] != ct[j][k])
                             d++;
 
-                if (mn > d)
+                if (mn >= d)
                 {
                     mn = d;
                     mni = i + 1;
