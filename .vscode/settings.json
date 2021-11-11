@@ -6,6 +6,21 @@
         "sstream": "cpp",
         "regex": "cpp",
         "bitset": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "iosfwd": "cpp",
+        "*.tcc": "cpp",
+        "cstdlib": "cpp",
+        "exception": "cpp",
+        "any": "cpp",
+        "memory_resource": "cpp",
+        "cmath": "cpp",
+        "functional": "cpp",
+        "new": "cpp",
+        "typeinfo": "cpp",
+        "utility": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "list": "cpp"
     }
 }
