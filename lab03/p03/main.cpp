@@ -25,7 +25,8 @@ int main()
         if (l % 4 == 0)
         {
             runGame(players);
-            players.clear();
+            players[0].clear();
+            players[1].clear();
         }
     }
 }
