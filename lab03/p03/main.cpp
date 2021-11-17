@@ -73,11 +73,10 @@ void runGame(vector<vector<string>> players)
 
 void printWinner(vector<vector<string>> players)
 {
-    cout << setw(2);
     if (players[0].empty())
-        cout << "1 " << players[1].size();
+        cout << "1 " << setw(2) << players[1].size();
     else
-        cout << "2 " << players[0].size();
+        cout << "2 " << setw(2) << players[0].size();
     cout << "\n";
 }
 
