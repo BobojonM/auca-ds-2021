@@ -94,6 +94,52 @@ public:
         }
     }
 
+    void printRes(int n)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            cout << i << ":";
+            if (columns[i].empty())
+                cout << endl;
+            else
+            {
+                while (!columns[i].empty())
+                {
+                    tmp.push_back(columns[i].back());
+                    columns[i].pop_back();
+                }
+
+                while (!tmp.empty())
+                {
+                    cout << " " << tmp.back();
+                    tmp.pop_back();
+                }
+                cout << endl;
+            }
+        }
+    }
+
+    void compute(int a, int b, string cmd, string cmd2)
+    {
+        if (a != b && block[a] != block[b])
+        {
+            if (cmd[0] == 'm')
+            {
+                if (cmd2[1] == 'n')
+                    moveOnto(a, b);
+                else
+                    moveOver(a, b);
+            }
+            else
+            {
+                if (cmd2[1] == 'n')
+                    pileOnto(a, b);
+                else
+                    pileOver(a, b);
+            }
+        }
+    }
+
     void run(istream &inp)
     {
         int n, a, b;
@@ -114,47 +160,10 @@ public:
 
                 inp >> a >> cmd2 >> b;
 
-                if (a != b && block[a] != block[b])
-                {
-                    if (cmd[0] == 'm')
-                    {
-                        if (cmd2[1] == 'n')
-                            moveOnto(a, b);
-                        else
-                            moveOver(a, b);
-                    }
-                    else
-                    {
-                        if (cmd2[1] == 'n')
-                            pileOnto(a, b);
-                        else
-                            pileOver(a, b);
-                    }
-                }
+                compute(a, b, cmd, cmd2);
             }
 
-            //print
-            for (int i = 0; i < n; i++)
-            {
-                cout << i << ":";
-                if (columns[i].empty())
-                    cout << endl;
-                else
-                {
-                    while (!columns[i].empty())
-                    {
-                        tmp.push_back(columns[i].back());
-                        columns[i].pop_back();
-                    }
-
-                    while (!tmp.empty())
-                    {
-                        cout << " " << tmp.back();
-                        tmp.pop_back();
-                    }
-                    cout << endl;
-                }
-            }
+            printRes(n);
         }
     }
 };
@@ -162,6 +171,8 @@ public:
 int main()
 {
     iostream::sync_with_stdio(false);
+
+    int n;
 
     World world;
 
