@@ -6,7 +6,7 @@ int sz(const C &c) { return static_cast<int>(c.size()); }
 using namespace std;
 
 void runGame(vector<vector<string>> players);
-void winner(vector<vector<string>> players);
+void printWinner(vector<vector<string>> players);
 void pop(int pID, string &card, vector<vector<string>> &players, vector<string> &cards, int &ind);
 
 int main()
@@ -35,36 +35,43 @@ void runGame(vector<vector<string>> players)
 {
     string card;
     vector<string> cards;
+    bool winner = false;
 
-    for (int ind, pID = 0; (!players[pID].empty());)
+    for (int ind, pID = 0; !players[pID].empty();)
     {
         pop(pID, card, players, cards, ind);
         pID = (pID == 0) ? 1 : 0;
-
-        for (int ind2, t = ind + 1; t && !players[pID].empty();)
+        for (int ind2, t = ind; t; winner = true)
         {
+            if (players[pID].empty())
+            {
+                winner = false;
+                break;
+            }
+
             pop(pID, card, players, cards, ind2);
-            if (ind2 + 1)
+            if (ind2)
             {
                 pID = (pID == 0) ? 1 : 0;
-                t = ind2 + 1;
+                t = ind2;
             }
             else
                 t--;
         }
 
-        if (ind + 1 && !players[pID].empty())
+        if (winner)
         {
+            winner = false;
             pID = (pID == 0) ? 1 : 0;
             players[pID].insert(players[pID].begin(), cards.rbegin(), cards.rend());
             cards.clear();
         }
     }
 
-    winner(players);
+    printWinner(players);
 }
 
-void winner(vector<vector<string>> players)
+void printWinner(vector<vector<string>> players)
 {
     cout << setw(2);
     if (players[0].empty())
@@ -80,5 +87,5 @@ void pop(int pID, string &card, vector<vector<string>> &players, vector<string> 
     card = players[pID].back();
     players[pID].pop_back();
     cards.push_back(card);
-    ind = faceCards.find(card[1]);
+    ind = faceCards.find(card[1]) + 1;
 }
