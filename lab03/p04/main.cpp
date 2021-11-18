@@ -84,7 +84,9 @@ void eliminate(int n, vector<string> names, vector<vector<int>> votes)
 
         int res = winner(votes, eliminates, candidates, names, mn, mx);
 
-        if (!res || res == 1)
+        if (!res)
+            return;
+        if (res != 2)
             break;
 
         for (int i = 0; i < n; i++)
