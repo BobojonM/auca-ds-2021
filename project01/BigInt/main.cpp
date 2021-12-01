@@ -184,4 +184,150 @@ TEST_CASE("bigInt: operator +")
 
         REQUIRE(sout.str() == "1169");
     }
+
+    SUBCASE("Test with 12 + -65")
+    {
+        BigInt a(1234);
+        BigInt b(-65);
+
+        sout << a + b;
+
+        REQUIRE(sout.str() == "1169");
+    }
+}
+
+TEST_CASE("bigInt: operator -")
+{
+    ostringstream sout;
+    SUBCASE("Test with -1234 - -65")
+    {
+        BigInt a(-1234);
+        BigInt b(-65);
+
+        sout << a - b;
+
+        REQUIRE(sout.str() == "-1169");
+    }
+
+    SUBCASE("Test with -1234 - 65")
+    {
+        BigInt a(-1234);
+        BigInt b(65);
+
+        sout << a - b;
+
+        REQUIRE(sout.str() == "-1299");
+    }
+
+    SUBCASE("Test with 1234 - -65")
+    {
+        BigInt a(1234);
+        BigInt b(-65);
+
+        sout << a - b;
+
+        REQUIRE(sout.str() == "1299");
+    }
+
+    SUBCASE("Test with 1234 - 65")
+    {
+        BigInt a(1234);
+        BigInt b(65);
+
+        sout << a - b;
+
+        REQUIRE(sout.str() == "1169");
+    }
+
+    SUBCASE("Test with 123 - 123")
+    {
+        BigInt a(123);
+        BigInt b(123);
+
+        sout << a - b;
+
+        REQUIRE(sout.str() == "0");
+    }
+
+    SUBCASE("Test with 12 - 65")
+    {
+        BigInt a(12);
+        BigInt b(65);
+
+        sout << a - b;
+
+        REQUIRE(sout.str() == "-53");
+    }
+}
+
+TEST_CASE("bigInt: operator >")
+{
+    ostringstream sout;
+    SUBCASE("Test with -1234 > -65")
+    {
+        BigInt a(-1234);
+        BigInt b(-65);
+
+        REQUIRE((a > b) == false);
+    }
+
+    SUBCASE("Test with 1 > -65")
+    {
+        BigInt a(1);
+        BigInt b(-65);
+
+        REQUIRE((a > b) == true);
+    }
+
+    SUBCASE("Test with -1 > 65")
+    {
+        BigInt a(-1);
+        BigInt b(65);
+
+        REQUIRE((a > b) == false);
+    }
+
+    SUBCASE("Test with 10 > 9")
+    {
+        BigInt a(10);
+        BigInt b(9);
+
+        REQUIRE((a > b) == true);
+    }
+}
+
+TEST_CASE("bigInt: operator <")
+{
+    ostringstream sout;
+    SUBCASE("Test with -1234 < -65")
+    {
+        BigInt a(-1234);
+        BigInt b(-65);
+
+        REQUIRE((a < b) == true);
+    }
+
+    SUBCASE("Test with 1 < -65")
+    {
+        BigInt a(1);
+        BigInt b(-65);
+
+        REQUIRE((a < b) == false);
+    }
+
+    SUBCASE("Test with -1 < 65")
+    {
+        BigInt a(-1);
+        BigInt b(65);
+
+        REQUIRE((a < b) == true);
+    }
+
+    SUBCASE("Test with 10 < 9")
+    {
+        BigInt a(10);
+        BigInt b(9);
+
+        REQUIRE((a < b) == false);
+    }
 }
