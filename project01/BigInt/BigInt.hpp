@@ -71,6 +71,46 @@ public:
     }
 };
 
+BigInt &operator+(BigInt &a, const BigInt &b)
+{
+    std::vector<int> rDigits;
+
+    int al = a.digits().size();
+    int bl = b.digits().size();
+    std::vector<int> aDigits = a.digits();
+    std::vector<int> bDigits = b.digits();
+
+    std::vector<int> maxDigits = al > bl ? aDigits : bDigits;
+
+    int d = 0;
+    for (int i = 1; i <= std::min(al, bl); i++)
+    {
+        int sum = aDigits[al - i] + bDigits[al - i];
+        rDigits.push_back((sum + d) % 10);
+        d = (sum + d) / 10;
+    }
+
+    int ml = (int)maxDigits.size();
+    int d2 = 0;
+    for (int i = std::min(al, bl); i <= ml; i++)
+    {
+        int sum = maxDigits[ml - i] + d;
+        rDigits.push_back((sum + d2) % 10);
+        d2 = (sum + d2) / 10;
+        d = 0;
+    }
+
+    std::ostringstream sout;
+    for (int i : rDigits)
+    {
+        sout << i;
+    }
+
+    const std::string str(sout.str());
+
+    return BigInt(str);
+}
+
 std::istream &operator>>(std::istream &sinp, BigInt &b)
 {
     std::string str, line;

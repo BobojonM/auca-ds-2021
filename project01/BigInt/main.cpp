@@ -84,7 +84,6 @@ TEST_CASE("bigInt: int constructor")
 
 TEST_CASE("bigInt: intput operator >>")
 {
-
     ostringstream sout;
     SUBCASE("Test with -1000000000")
     {
@@ -120,5 +119,19 @@ TEST_CASE("bigInt: intput operator >>")
         sinp >> a;
         sout << a;
         REQUIRE(sout.str() == "123");
+    }
+}
+
+TEST_CASE("bigInt: operator +")
+{
+    ostringstream sout;
+    SUBCASE("Test with 123 + 1234")
+    {
+        BigInt a(123);
+        BigInt b(1234);
+
+        sout << a + b;
+
+        REQUIRE(sout.str() == "1357");
     }
 }
