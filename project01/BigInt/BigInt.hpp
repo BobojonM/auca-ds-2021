@@ -6,6 +6,7 @@
 
 class BigInt
 {
+    friend BigInt operator+(const BigInt &a, const BigInt &b);
     std::vector<int> mDigits;
     bool mIsNegative;
 
@@ -71,7 +72,7 @@ public:
     }
 };
 
-BigInt &operator+(BigInt &a, const BigInt &b)
+BigInt operator+(const BigInt &a, const BigInt &b)
 {
     std::vector<int> rDigits;
 
@@ -85,14 +86,14 @@ BigInt &operator+(BigInt &a, const BigInt &b)
     int d = 0;
     for (int i = 1; i <= std::min(al, bl); i++)
     {
-        int sum = aDigits[al - i] + bDigits[al - i];
+        int sum = aDigits[al - i] + bDigits[bl - i];
         rDigits.push_back((sum + d) % 10);
         d = (sum + d) / 10;
     }
 
     int ml = (int)maxDigits.size();
     int d2 = 0;
-    for (int i = std::min(al, bl); i <= ml; i++)
+    for (int i = std::min(al, bl) + 1; i <= ml; i++)
     {
         int sum = maxDigits[ml - i] + d;
         rDigits.push_back((sum + d2) % 10);
@@ -100,15 +101,21 @@ BigInt &operator+(BigInt &a, const BigInt &b)
         d = 0;
     }
 
+    rDigits.push_back(d2);
+
     std::ostringstream sout;
-    for (int i : rDigits)
+    for (int i = rDigits.size() - 1; i > -1; i--)
     {
-        sout << i;
+        sout << rDigits[i];
     }
 
     const std::string str(sout.str());
 
-    return BigInt(str);
+    std::cout << "### " << str << "\n";
+
+    BigInt r(str);
+
+    return r;
 }
 
 std::istream &operator>>(std::istream &sinp, BigInt &b)

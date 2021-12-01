@@ -125,13 +125,33 @@ TEST_CASE("bigInt: intput operator >>")
 TEST_CASE("bigInt: operator +")
 {
     ostringstream sout;
-    SUBCASE("Test with 123 + 1234")
+    SUBCASE("Test with 123 + 11234")
     {
         BigInt a(123);
-        BigInt b(1234);
+        BigInt b(11234);
 
         sout << a + b;
 
-        REQUIRE(sout.str() == "1357");
+        REQUIRE(sout.str() == "11357");
+    }
+
+    SUBCASE("Test with 9999 + 1")
+    {
+        BigInt a(9999);
+        BigInt b(1);
+
+        sout << a + b;
+
+        REQUIRE(sout.str() == "10000");
+    }
+
+    SUBCASE("Test with 9999 + 999")
+    {
+        BigInt a(9999);
+        BigInt b(999);
+
+        sout << a + b;
+
+        REQUIRE(sout.str() == "10998");
     }
 }
