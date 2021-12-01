@@ -65,7 +65,7 @@ public:
             }
         }
 
-        for (int i = 0; mDigits[i] == 0;)
+        for (int i = 0; mDigits[i] == 0 && mDigits.size() > 1;)
         {
             mDigits.erase(mDigits.begin() + i);
         }
@@ -77,7 +77,7 @@ BigInt add(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
     std::vector<int> rDigits;
 
     int d = 0;
-    for (int i = 1; i <= al; i++)
+    for (int i = 1; i <= bl; i++)
     {
         int sum = aDigits[al - i] + bDigits[bl - i];
         rDigits.push_back((sum + d) % 10);
@@ -109,31 +109,36 @@ BigInt sub(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
     std::vector<int> rDigits;
 
     int d = 0;
-    for (int i = 1; i <= al; i++)
+    for (int i = 1; i <= bl; i++)
     {
-        int sum = (aDigits[al - i] - d) - bDigits[bl - i];
+        int sum = (aDigits[al - i] + d) - bDigits[bl - i];
+        //std::cout << (aDigits[al - i] - d) - bDigits[bl - i] << " " << aDigits[al - i] << " " << bDigits[bl - i] << "\n";
         d = 0;
         if (sum < 0)
         {
             d = -1;
-            sum = 10 - sum;
+            sum = 10 + sum;
         }
         rDigits.push_back(sum);
+        //std::cout << sum << " ";
     }
 
     int d2 = 0;
     for (int i = bl + 1; i <= al; i++)
     {
-        int sum = aDigits[al - i] - d;
+        int sum = aDigits[al - i] + d + d2;
         d2 = 0;
         if (sum < 0)
         {
             d2 = -1;
-            sum = 10 - sum;
+            sum = 10 + sum;
         }
         rDigits.push_back(sum);
+        //std::cout << sum << " ";
         d = 0;
     }
+
+    std::cout << "\n";
 
     std::ostringstream sout;
     for (int i = rDigits.size() - 1; i > -1; i--)
@@ -141,18 +146,23 @@ BigInt sub(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
         sout << rDigits[i];
     }
 
+    std::cout << sout.str() << " " << al << " " << bl << "\n";
+
     return BigInt(sout.str());
 }
 
-bool bigger(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
+bool bigger(const BigInt a, int al, const BigInt b, int bl)
 {
+    std::vector<int> aDigits = a.digits();
+    std::vector<int> bDigits = b.digits();
+
     if (al > bl)
         return true;
     else if (al < bl)
         return false;
     else
     {
-        int i = std::max(al, bl);
+        int i = al;
         while (i > 0)
         {
             if (aDigits[i - 1] > bDigits[i - 1])
@@ -161,6 +171,9 @@ bool bigger(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
                 return false;
             i--;
         }
+
+        if (a.isNegative())
+            return false;
     }
 
     return true;
@@ -173,14 +186,16 @@ BigInt operator+(const BigInt &a, const BigInt &b)
     int al = a.digits().size();
     int bl = b.digits().size();
 
-    if (bigger(a.digits(), al, b.digits(), bl))
+    if (bigger(a, al, b, bl))
     {
+        //std::cout << "B\n";
         if (a.isNegative() and b.isNegative())
         {
             r = add(a.digits(), al, b.digits(), bl);
         }
         else if (a.isNegative() || b.isNegative())
         {
+            //std::cout << "M\n";
             r = sub(a.digits(), al, b.digits(), bl);
             if (a.isNegative())
                 r.mIsNegative = true;
@@ -190,6 +205,7 @@ BigInt operator+(const BigInt &a, const BigInt &b)
     }
     else
     {
+        //std::cout << "S\n";
         if (b.isNegative() and a.isNegative())
         {
             r = add(b.digits(), bl, a.digits(), al);
@@ -201,7 +217,10 @@ BigInt operator+(const BigInt &a, const BigInt &b)
                 r.mIsNegative = true;
         }
         else
+        {
+            //std::cout << "P\n";
             r = add(b.digits(), bl, a.digits(), al);
+        }
     }
 
     return r;
