@@ -154,4 +154,34 @@ TEST_CASE("bigInt: operator +")
 
         REQUIRE(sout.str() == "10998");
     }
+
+    SUBCASE("Test with 9999 + -9999")
+    {
+        BigInt a(9999);
+        BigInt b(-9999);
+
+        sout << a + b;
+
+        REQUIRE(sout.str() == "0");
+    }
+
+    SUBCASE("Test with -1234 + 65")
+    {
+        BigInt a(-1234);
+        BigInt b(65);
+
+        sout << a + b;
+
+        REQUIRE(sout.str() == "-1169");
+    }
+
+    SUBCASE("Test with 1234 + -65")
+    {
+        BigInt a(1234);
+        BigInt b(-65);
+
+        sout << a + b;
+
+        REQUIRE(sout.str() == "1169");
+    }
 }
