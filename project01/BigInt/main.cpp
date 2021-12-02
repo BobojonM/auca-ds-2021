@@ -294,6 +294,14 @@ TEST_CASE("bigInt: operator >")
 
         REQUIRE((a > b) == true);
     }
+
+    SUBCASE("Test with 10 > 10")
+    {
+        BigInt a(10);
+        BigInt b(10);
+
+        REQUIRE((a > b) == false);
+    }
 }
 
 TEST_CASE("bigInt: operator <")
@@ -329,5 +337,157 @@ TEST_CASE("bigInt: operator <")
         BigInt b(9);
 
         REQUIRE((a < b) == false);
+    }
+
+    SUBCASE("Test with 10 < 10")
+    {
+        BigInt a(10);
+        BigInt b(10);
+
+        REQUIRE((a < b) == false);
+    }
+}
+
+TEST_CASE("bigInt: operator <=")
+{
+    ostringstream sout;
+    SUBCASE("Test with -1234 <= -65")
+    {
+        BigInt a(-1234);
+        BigInt b(-65);
+
+        REQUIRE((a <= b) == true);
+    }
+
+    SUBCASE("Test with 1 <= -65")
+    {
+        BigInt a(1);
+        BigInt b(-65);
+
+        REQUIRE((a <= b) == false);
+    }
+
+    SUBCASE("Test with -1 <= 65")
+    {
+        BigInt a(-1);
+        BigInt b(65);
+
+        REQUIRE((a <= b) == true);
+    }
+
+    SUBCASE("Test with 10 <= 10")
+    {
+        BigInt a(10);
+        BigInt b(10);
+
+        REQUIRE((a <= b) == true);
+    }
+}
+
+TEST_CASE("bigInt: operator >=")
+{
+    ostringstream sout;
+    SUBCASE("Test with -1234 >= -65")
+    {
+        BigInt a(-1234);
+        BigInt b(-65);
+
+        REQUIRE((a >= b) == false);
+    }
+
+    SUBCASE("Test with 1 >= -65")
+    {
+        BigInt a(1);
+        BigInt b(-65);
+
+        REQUIRE((a >= b) == true);
+    }
+
+    SUBCASE("Test with -1 >= -1")
+    {
+        BigInt a(-1);
+        BigInt b(-1);
+
+        REQUIRE((a >= b) == true);
+    }
+
+    SUBCASE("Test with 10 >= 10")
+    {
+        BigInt a(10);
+        BigInt b(10);
+
+        REQUIRE((a >= b) == true);
+    }
+}
+
+TEST_CASE("bigInt: operator ==")
+{
+    ostringstream sout;
+    SUBCASE("Test with -1234 == -65")
+    {
+        BigInt a(-1234);
+        BigInt b(-65);
+
+        REQUIRE((a == b) == false);
+    }
+
+    SUBCASE("Test with 1 == -65")
+    {
+        BigInt a(1);
+        BigInt b(-65);
+
+        REQUIRE((a == b) == false);
+    }
+
+    SUBCASE("Test with -1 == -1")
+    {
+        BigInt a(-1);
+        BigInt b(-1);
+
+        REQUIRE((a == b) == true);
+    }
+
+    SUBCASE("Test with 10 == 10")
+    {
+        BigInt a(10);
+        BigInt b(10);
+
+        REQUIRE((a == b) == true);
+    }
+}
+
+TEST_CASE("bigInt: operator !=")
+{
+    ostringstream sout;
+    SUBCASE("Test with -1234 != -65")
+    {
+        BigInt a(-1234);
+        BigInt b(-65);
+
+        REQUIRE((a != b) == true);
+    }
+
+    SUBCASE("Test with 1 != -65")
+    {
+        BigInt a(1);
+        BigInt b(-65);
+
+        REQUIRE((a != b) == true);
+    }
+
+    SUBCASE("Test with -1 != -1")
+    {
+        BigInt a(-1);
+        BigInt b(-1);
+
+        REQUIRE((a != b) == false);
+    }
+
+    SUBCASE("Test with 10 != 10")
+    {
+        BigInt a(10);
+        BigInt b(10);
+
+        REQUIRE((a != b) == false);
     }
 }

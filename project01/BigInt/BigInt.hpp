@@ -267,6 +267,23 @@ BigInt operator-(const BigInt &a, const BigInt &b)
     return r;
 }
 
+bool operator==(const BigInt &a, const BigInt &b)
+{
+    if (a.isNegative() == b.isNegative() && a.size() == b.size())
+    {
+        std::vector<int> aDigits = a.digits();
+        std::vector<int> bDigits = b.digits();
+        for (int i = 0; i < a.size(); i++)
+        {
+            if (aDigits[i] != bDigits[i])
+                return false;
+        }
+        return true;
+    }
+
+    return false;
+}
+
 bool operator>(const BigInt &a, const BigInt &b)
 {
     if (!a.isNegative() && b.isNegative())
@@ -275,7 +292,7 @@ bool operator>(const BigInt &a, const BigInt &b)
         return false;
     else if (a.isNegative() && b.isNegative())
         return !bigger(a, a.size(), b, b.size());
-    return bigger(a, a.size(), b, b.size());
+    return (bigger(a, a.size(), b, b.size()) && !(a == b));
 }
 
 bool operator<(const BigInt &a, const BigInt &b)
@@ -287,6 +304,21 @@ bool operator<(const BigInt &a, const BigInt &b)
     else if (a.isNegative() && b.isNegative())
         return bigger(a, a.size(), b, b.size());
     return !bigger(a, a.size(), b, b.size());
+}
+
+bool operator>=(const BigInt &a, const BigInt &b)
+{
+    return !(a < b);
+}
+
+bool operator<=(const BigInt &a, const BigInt &b)
+{
+    return !(a > b);
+}
+
+bool operator!=(const BigInt &a, const BigInt &b)
+{
+    return !(a == b);
 }
 
 std::istream &operator>>(std::istream &sinp, BigInt &b)
