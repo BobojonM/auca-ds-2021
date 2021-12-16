@@ -21,13 +21,13 @@ int main()
              {
                  if (a % m == b % m)
                  {
-                     if (a % 2 == 0 && b % 2 != 0)
+                     if (abs(a % 2) == 0 && abs(b % 2) != 0)
                          return false;
-                     if (a % 2 != 0 && b % 2 == 0)
+                     if (abs(a % 2) != 0 && abs(b % 2) == 0)
                          return true;
-                     if (a % 2 == 1 && b % 2 == 1)
+                     if (abs(a % 2) == 1 && abs(b % 2) == 1)
                          return a > b;
-                     if (a % 2 == 0 && b % 2 == 0)
+                     if (abs(a % 2) == 0 && abs(b % 2) == 0)
                          return a < b;
                  }
                  return a % m < b % m;
@@ -37,5 +37,6 @@ int main()
         for (int i = 0; i < n; i++)
             cout << vc[i] << "\n";
     }
-    cout << n << " " << m << "\n";
+    if (!n && !m)
+        cout << n << " " << m << "\n";
 }
