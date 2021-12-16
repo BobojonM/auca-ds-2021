@@ -33,7 +33,9 @@ int main()
                  return a % m < b % m;
              });
 
+        cout << n << " " << m << "\n";
         for (int i = 0; i < n; i++)
             cout << vc[i] << "\n";
     }
+    cout << n << " " << m << "\n";
 }
