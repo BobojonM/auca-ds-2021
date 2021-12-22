@@ -89,3 +89,31 @@ ForwardIt auMinElement(ForwardIt beg, ForwardIt end, Compare comp)
 
     return min;
 }
+
+template <class ForwardIt, class T>
+bool auBinarySearch(ForwardIt beg, ForwardIt end, const T &value)
+{
+    while (beg != end)
+    {
+        ForwardIt middle = beg;
+        advance(middle, (end - beg) / 2);
+
+        if (value > *middle)
+        {
+            beg = middle;
+        }
+        else if (value < *middle)
+        {
+            end = middle;
+        }
+        else
+        {
+            return true;
+        }
+
+        if (end - beg == 1 && (value != *beg && value != *end))
+            break;
+    }
+
+    return false;
+}
