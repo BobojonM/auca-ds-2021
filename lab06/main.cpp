@@ -3,6 +3,8 @@
 #include <iterator>
 #include <vector>
 #include <string>
+#include <utility>
+#include <tuple>
 
 #include "../au/algol.hpp"
 
@@ -193,6 +195,50 @@ void p03()
     }
 }
 
+void p0401()
+{
+    vector<int> vc;
+    int x;
+
+    while (cin >> x)
+    {
+        vc.push_back(x);
+    }
+
+    auto it = min_element(begin(vc), end(vc));
+
+    if (it != end(vc))
+    {
+        cout << "index of it: " << it - begin(vc) << endl;
+    }
+    else
+    {
+        cout << "not found" << endl;
+    }
+}
+
+void p0402()
+{
+    vector<int> vc;
+    int x;
+
+    while (cin >> x)
+    {
+        vc.push_back(x);
+    }
+
+    auto it = auMinElement(begin(vc), end(vc));
+
+    if (it != end(vc))
+    {
+        cout << "index of it: " << it - begin(vc) << endl;
+    }
+    else
+    {
+        cout << "not found" << endl;
+    }
+}
+
 struct CmpByGpa
 {
     bool operator()(const Student &s1, Student &s2) const
@@ -287,6 +333,51 @@ void p07()
     }
 }
 
+void p08()
+{
+    vector<pair<string, double>> students;
+    string name;
+    double gpa;
+
+    while (cin >> name >> gpa)
+    {
+        students.emplace_back(name, gpa);
+    }
+
+    cout << "-------------" << endl;
+
+    sort(begin(students), end(students));
+
+    for (const auto &s : students)
+    {
+        cout << s.first << ", " << s.second << endl;
+    }
+}
+
+void p09()
+{
+    using Employee = tuple<string, int, double>;
+    vector<Employee> employees;
+    string name;
+    int age;
+    double salary;
+
+    while (cin >> name >> age >> salary)
+    {
+        employees.emplace_back(name, age, salary);
+    }
+
+    cout << "-------------" << endl;
+
+    sort(begin(employees), end(employees), [](const Employee &e1, const Employee &e2)
+         { return get<1>(e1) < get<1>(e2); });
+
+    for (const auto &s : employees)
+    {
+        cout << get<0>(s) << ", " << get<1>(s) << ", " << get<2>(s) << endl;
+    }
+}
+
 int main()
 {
     //p0101();
@@ -297,7 +388,14 @@ int main()
 
     //p03();
 
+    //p0401();
+    p0402();
+
     //p06();
 
     //p07();
+
+    //p08();
+
+    //p09();
 }
