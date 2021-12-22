@@ -22,10 +22,11 @@ public:
         : data(nullptr), sz(0), cp(0)
     {
     }
-    explicit VecInt(int size, int initValue)
+
+    explicit VecInt(size_t size, int initValue = 0)
         : data(new int[size]), sz(size), cp(size)
     {
-        for (int i = 0; i < size; i++)
+        for (size_t i = 0; i < size; i++)
             data[i] = initValue;
     }
 
