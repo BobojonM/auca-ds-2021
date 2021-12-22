@@ -22,7 +22,6 @@ struct Student
 };
 
 // supporr call operator: T t; t()
-
 struct IsEven
 {
     bool operator()(int value) const
@@ -456,6 +455,80 @@ void p09()
     }
 }
 
+void p1001()
+{
+    vector<int> v = {0, 4, 5, 10, 12, 20, 40, 45};
+    int x;
+
+    sort(begin(v), end(v));
+
+    while (cin >> x)
+    {
+        if (binary_search(begin(v), end(v), x))
+        {
+            cout << "Yes\n";
+        }
+        else
+        {
+            cout << "No\n";
+        }
+    }
+}
+
+void p1002()
+{
+    vector<int> v = {0, 4, 5, 10, 12, 20, 40, 45};
+    int x;
+
+    while (cin >> x)
+    {
+        if (binary_search(begin(v), end(v), x))
+        {
+            cout << "Yes\n";
+        }
+        else
+        {
+            cout << "No\n";
+        }
+    }
+}
+
+void p11()
+{
+    vector<int> v = {1, 4, 5, 10, 12, 20, 40, 45};
+    int x;
+
+    while (cin >> x)
+    {
+        auto it = lower_bound(begin(v), end(v), x);
+        if (it == end(v))
+        {
+            cout << "no element is equal or greater than " << x << endl;
+        }
+        else if (*it == x)
+        {
+            cout << "index of the first element equal to " << x << " is " << it - begin(v) << endl;
+        }
+        else
+        {
+            cout << "index of the first element greater than " << x << " is " << it - begin(v) << endl;
+        }
+    }
+}
+
+void p12()
+{
+    vector<int> v = {0, 0, 4, 5, 10, 10, 10, 12, 20, 25, 35, 25, 25, 40};
+
+    sort(begin(v), end(v));
+
+    for (int x; cin >> x;)
+    {
+        auto it = equal_range(begin(v), end(v), x);
+        cout << "number of occurences of " << x << " is " << it.second - it.first << endl;
+    }
+}
+
 int main()
 {
     //p0101();
@@ -470,7 +543,7 @@ int main()
     //p0402();
 
     //p0501();
-    p0502();
+    //p0502();
 
     //p06();
 
@@ -479,4 +552,11 @@ int main()
     //p08();
 
     //p09();
+
+    //p1001();
+    //p1002();
+
+    //p11();
+
+    //p12();
 }
