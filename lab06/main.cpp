@@ -147,6 +147,52 @@ void p0202()
     }
 }
 
+struct GreaterThan
+{
+    int mData;
+    GreaterThan(int data)
+        : mData(data)
+    {
+    }
+
+    bool operator()(int value) const
+    {
+        return value > mData;
+    }
+};
+
+void p03()
+{
+    vector<int> v = {3, 1, 20, 4, 7, 0, 5};
+
+    cout << "x = ";
+    int x;
+    cin >> x;
+
+    auto it = find_if(begin(v), end(v), GreaterThan(x));
+    if (it != end(v))
+    {
+        cout << "the index: " << it - begin(v) << endl;
+        cout << "the value: " << *it << endl;
+    }
+    else
+    {
+        cout << "Value greater than " << x << " not found" << endl;
+    }
+
+    auto it2 = find_if(begin(v), end(v), [x](int value)
+                       { return value > x; });
+    if (it2 != end(v))
+    {
+        cout << "the index: " << it2 - begin(v) << endl;
+        cout << "the value: " << *it2 << endl;
+    }
+    else
+    {
+        cout << "Value greater than " << x << " not found" << endl;
+    }
+}
+
 struct CmpByGpa
 {
     bool operator()(const Student &s1, Student &s2) const
@@ -185,6 +231,62 @@ void p06()
     }
 }
 
+void p07()
+{
+    vector<Student> students = {
+        {"C", 3.45},
+        {"Z", 4.00},
+        {"X", 4.00},
+        {"Y", 3.00},
+        {"W", 4.00},
+        {"E", 4.00},
+        {"R", 3.00},
+        {"T", 4.00},
+        {"D", 2.45},
+        {"A", 3.00},
+    };
+
+    cout << "------------- Regular sort -------------" << endl;
+
+    sort(begin(students), end(students), [](const Student &s1, const Student &s2)
+         { return s1.mName < s2.mName; });
+
+    for (const auto s : students)
+    {
+        cout << s.mName << ", " << s.mGpa << endl;
+    }
+
+    cout << "-------------" << endl;
+
+    sort(begin(students), end(students), [](const Student &s1, const Student &s2)
+         { return s1.mGpa < s2.mGpa; });
+
+    for (const auto s : students)
+    {
+        cout << s.mName << ", " << s.mGpa << endl;
+    }
+
+    cout << "------------- Stable sort -------------" << endl;
+
+    stable_sort(begin(students), end(students), [](const Student &s1, const Student &s2)
+                { return s1.mName < s2.mName; });
+
+    for (const auto s : students)
+    {
+        cout << s.mName << ", " << s.mGpa << endl;
+    }
+
+    cout << "-------------" << endl;
+
+    stable_sort(begin(students), end(students), [](const Student &s1, const Student &s2)
+                { return s1.mGpa < s2.mGpa; });
+
+    for (const auto s : students)
+    {
+        cout << s.mName << ", " << s.mGpa << endl;
+    }
+}
+
 int main()
 {
     //p0101();
@@ -193,5 +295,9 @@ int main()
     //p0201();
     //p0202();
 
-    p06();
+    //p03();
+
+    //p06();
+
+    //p07();
 }
