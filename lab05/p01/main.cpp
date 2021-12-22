@@ -46,7 +46,7 @@ void p02()
 
     printVecInt(v);
     auReverse(v.begin(), v.end());
-    //  auReverse(v.data, v.data + v.sz); functions begin(), end() inlined
+    // auReverse(v.data, v.data + v.sz); functions begin(), end() inlined
     printVecInt(v);
 }
 
