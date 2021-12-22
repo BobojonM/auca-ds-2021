@@ -482,7 +482,7 @@ void p1002()
 
     while (cin >> x)
     {
-        if (binary_search(begin(v), end(v), x))
+        if (auBinarySearch(begin(v), end(v), x))
         {
             cout << "Yes\n";
         }
@@ -554,7 +554,7 @@ int main()
     //p09();
 
     //p1001();
-    //p1002();
+    p1002();
 
     //p11();
 
