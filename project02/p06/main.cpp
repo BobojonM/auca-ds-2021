@@ -23,20 +23,28 @@ int totalScoreA(Team a, Team b)
 {
     int total = 0;
 
-    total += a.totalPoints > b.totalPoints;
-    total += a.wins > b.wins;
-    total += a.goalDiff > b.goalDiff;
-    total += a.goalScored > b.goalScored;
-    total += a.gamesPlayed < b.gamesPlayed;
+    total += (a.totalPoints > b.totalPoints) * 32;
+    total += (a.wins > b.wins) * 16;
+    total += (a.goalDiff > b.goalDiff) * 8;
+    total += (a.goalScored > b.goalScored) * 4;
+    total += (a.gamesPlayed < b.gamesPlayed) * 2;
 
     return total;
+}
+
+string to_lower(string a)
+{
+    for (int i = 0; i < sz(a); i++)
+        a[i] = tolower(a[i]);
+
+    return a;
 }
 
 struct CmpByName
 {
     bool operator()(const Team &a, const Team &b) const
     {
-        return a.name < b.name;
+        return to_lower(a.name) < to_lower(b.name);
     }
 };
 
@@ -65,6 +73,9 @@ Team make_team(string name, int wins = 0, int ties = 0, int losses = 0, int goal
     a.losses = losses;
     a.goalScored = goalScored;
     a.goalAgainst = goalAgainst;
+    a.totalPoints = 0;
+    a.gamesPlayed = 0;
+    a.goalDiff = 0;
 
     return a;
 }
@@ -101,7 +112,7 @@ int main()
     for (int test = 0; test < x; test++)
     {
         if (test)
-            cout << "\n";
+            printf("\n");
 
         vector<Team> vc;
 
@@ -187,7 +198,7 @@ int main()
         sort(vc.begin(), vc.end(), CmpByResult());
 
         //Printing
-        cout << tournament << endl;
+        printf("%s\n", tournament.c_str());
         for (int i = 0; i < sz(vc); i++)
         {
             printf("%d) %s %dp, %dg (%d-%d-%d), %dgd (%d-%d)\n", i + 1, vc[i].name.c_str(), vc[i].totalPoints, vc[i].gamesPlayed, vc[i].wins, vc[i].ties, vc[i].losses, vc[i].goalDiff, vc[i].goalScored, vc[i].goalAgainst);
