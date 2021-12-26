@@ -19,9 +19,18 @@ struct Team
     int solvedProblems;
     int penalty;
 
-    void TeamUpdate(int n, int sp, int p)
+    Team()
+        : number(0), solvedProblems(0), penalty(0)
     {
-        number = n;
+    }
+
+    Team(int n, int sp, int p)
+        : number(n), solvedProblems(sp), penalty(p)
+    {
+    }
+
+    void TeamUpdate(int sp, int p)
+    {
         solvedProblems += sp;
         penalty += p;
     }
@@ -67,7 +76,12 @@ Submission make_submission(int consestant, int problem, int time, string l)
 
     a.consestant = consestant;
     a.problem = problem;
-    a.time = (l == "I" ? 20 : time);
+    if (l == "I")
+        a.time = 20;
+    else if (l == "C")
+        a.time = time;
+    else
+        a.time = 0;
     a.l = l;
 
     return a;
@@ -93,11 +107,13 @@ int main()
         int contestant, problem, time;
         string line, l;
         set<int> teams;
+        map<int, Team> tm;
 
         while (getline(cin, line) && !line.empty())
         {
             stringstream inp(line);
             inp >> contestant >> problem >> time >> l;
+            tm[contestant] = Team(contestant, 0, 0);
 
             teams.insert(contestant);
 
@@ -108,7 +124,7 @@ int main()
             {
                 if ((*it).l == "I" && l == "C")
                 {
-                    (*it).l = l;
+                    (*it).l = "C";
                     (*it).time += time;
                 }
                 else if ((*it).l == "I" && l == "I")
@@ -125,27 +141,23 @@ int main()
         sort(vc.begin(), vc.end(), [](Submission a, Submission b)
              { return a.consestant < b.consestant; });
 
-        map<int, Team> tm;
-
-        for (int id : teams)
+        for (Submission e : vc)
         {
-            //cout << id << endl;
-            for (Submission e : vc)
-            {
 
+            for (int id : teams)
+            {
+                //cout << id << endl;
                 if (e.consestant == id)
                 {
-                    //cout << e.consestant << " " << e.problem << " " << e.time << " " << e.l << endl;
-
                     int sp = 0;
+                    int pen = 0;
                     if (e.l == "C")
+                    {
                         sp += 1;
+                        pen = e.time;
+                    }
 
-                    tm[id].TeamUpdate(id, sp, e.time);
-                }
-                else
-                {
-                    tm[id].TeamUpdate(id, 0, 0);
+                    tm[id].TeamUpdate(sp, pen);
                 }
             }
         }
