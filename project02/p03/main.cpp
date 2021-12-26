@@ -61,18 +61,29 @@ int main()
             }
         }
 
+        //cout << r << " " << c << " " << m << " " << n;
+
         sort(vc.begin(), vc.end(), [](Freq a, Freq b)
-             { return a.count < b.count; });
+             { return a.count > b.count; });
 
-        int freq = (*(--vc.end())).count;
+        int freq = (*(vc.begin())).count;
 
-        for (vector<Freq>::iterator a = --vc.end(); a > vc.begin(); a--)
+        for (vector<Freq>::iterator a = vc.begin(); a < vc.end() - 1; a++)
         {
-            if ((*a).count == (*(--a)).count)
+            if ((*a).count == (*(1 + a)).count)
                 freq += (*a).count;
             else
                 break;
         }
+
+        // cout << (*(vc.begin())).letter << " " << (*(vc.begin())).count << endl;
+        // cout << (*(1 + vc.begin())).letter << " " << (*(1 + vc.begin())).count << endl;
+        // cout << (*(2 + vc.begin())).letter << " " << (*(2 + vc.begin())).count << endl;
+        // cout << (*(3 + vc.begin())).letter << " " << (*(3 + vc.begin())).count << endl;
+        // cout << (*(4 + vc.begin())).letter << " " << (*(4 + vc.begin())).count << endl;
+        // cout << (*(5 + vc.begin())).letter << " " << (*(5 + vc.begin())).count << endl;
+
+        // cout << freq << endl;
 
         int nfreq = r * c - freq;
 
