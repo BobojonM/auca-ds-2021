@@ -25,7 +25,7 @@ int main()
         cin >> n;
 
         string name, value, tr;
-        vector<pair<int, string>> vc;
+        vector<pair<string, string>> vc;
         for (int i = 0; i < n; i++)
         {
             cin >> name;
@@ -34,16 +34,18 @@ int main()
             cin >> value >> tr;
             //cout << value << endl;
 
-            int val = 0;
+            string val = "";
             string cls;
             for (int j = 0; j < sz(value); j++)
             {
                 if (value[j] == '-')
                 {
                     if (cls == "upper")
-                        val += 2;
+                        val += "2";
                     else if (cls == "middle")
-                        val += 1;
+                        val += "1";
+                    else
+                        val += "0";
                     cls = "";
                     continue;
                 }
@@ -51,14 +53,16 @@ int main()
             }
 
             if (cls == "upper")
-                val += 2;
+                val += "2";
             else if (cls == "middle")
-                val += 1;
+                val += "1";
+            else
+                val += "0";
 
             vc.emplace_back(val, name);
         }
 
-        stable_sort(vc.begin(), vc.end(), [](pair<int, string> a, pair<int, string> b)
+        stable_sort(vc.begin(), vc.end(), [](pair<string, string> a, pair<string, string> b)
                     {
                         if (a.first == b.first)
                         {
