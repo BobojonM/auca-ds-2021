@@ -44,8 +44,8 @@ int main()
         auto it = find(cmds.begin(), cmds.end(), sortCmd);
         int ind = it - cmds.begin();
 
-        sort(data.begin(), data.end(), [ind](vector<string> a, vector<string> b)
-             { return a[ind] < b[ind]; });
+        stable_sort(data.begin(), data.end(), [ind](vector<string> a, vector<string> b)
+                    { return a[ind] < b[ind]; });
 
         for (int j = 0; j < sz(cmds); j++)
         {
