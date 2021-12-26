@@ -58,9 +58,16 @@ int main()
             vc.emplace_back(val, name);
         }
 
-        stable_sort(vc.begin(), vc.end());
+        stable_sort(vc.begin(), vc.end(), [](pair<int, string> a, pair<int, string> b)
+                    {
+                        if (a.first == b.first)
+                        {
+                            return a.second < b.second;
+                        }
+                        return a.first > b.first;
+                    });
 
-        for (int i = n - 1; i > -1; i--)
+        for (int i = 0; i < n; i++)
         {
             cout << vc[i].second << endl;
         }
