@@ -41,11 +41,11 @@ int main()
                 if (value[j] == '-')
                 {
                     if (cls == "upper")
-                        val += "2";
+                        val += "3";
                     else if (cls == "middle")
-                        val += "1";
+                        val += "2";
                     else
-                        val += "0";
+                        val += "1";
                     cls = "";
                     continue;
                 }
@@ -53,11 +53,15 @@ int main()
             }
 
             if (cls == "upper")
-                val += "2";
+                val += "3";
             else if (cls == "middle")
-                val += "1";
+                val += "2";
             else
-                val += "0";
+                val += "1";
+
+            reverse(begin(val), end(val));
+            while (sz(val) < 10)
+                val += "2";
 
             vc.emplace_back(val, name);
         }
