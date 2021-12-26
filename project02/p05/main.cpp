@@ -56,7 +56,11 @@ int main()
         }
 
         sort(vc.begin(), vc.end(), [](Pair a, Pair b)
-             { return a.value < b.value; });
+             {
+                 if (a.value == b.value)
+                     return a.ascii > b.ascii;
+                 return a.value < b.value;
+             });
 
         for (auto e : vc)
         {
