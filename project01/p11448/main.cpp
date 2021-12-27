@@ -12,6 +12,6 @@ int main()
     while (t--)
     {
         cin >> a >> b;
-        cout << BigInt(a) - BigInt(b) << "\n";
+        cout << (BigInt(a) - BigInt(b)) << "\n";
     }
 }
