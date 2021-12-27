@@ -12,7 +12,7 @@ int main()
 
         for (int i = 2; i <= n; ++i)
         {
-            t *= a;
+            t = t * a;
             res += (t * i);
         }
 
