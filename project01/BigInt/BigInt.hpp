@@ -53,7 +53,7 @@ class BigInt
         auto i = a.mDigits.rbegin();
         auto j = b.mDigits.rbegin();
 
-        std::string out = "";
+        std::string res = "";
 
         int carry = 0;
         while (i != a.mDigits.rend() || j != b.mDigits.rend())
@@ -73,22 +73,22 @@ class BigInt
             {
                 sum += 10;
                 carry = -1;
-                out += std::to_string(sum % 10);
+                res += std::to_string(sum % 10);
                 continue;
             }
             else
             {
                 carry = sum / 10;
-                out += std::to_string(sum % 10);
+                res += std::to_string(sum % 10);
             }
         }
         if (carry)
         {
-            out += std::to_string(carry);
+            res += std::to_string(carry);
         }
-        std::reverse(out.begin(), out.end());
+        std::reverse(res.begin(), res.end());
 
-        return BigInt(out);
+        return BigInt(res);
     }
 
 public:
@@ -272,27 +272,23 @@ bool operator>=(const BigInt &a, const BigInt &b)
 
 BigInt operator+(const BigInt &a, const BigInt &b)
 {
-    if (a.mIsNegative == b.mIsNegative) // if both are negative/ positive, just add
+    if (a.mIsNegative == b.mIsNegative)
     {
-        BigInt a1 = a, b1 = b;
-
+        BigInt a1 = a;
+        BigInt b1 = b;
         a1.mIsNegative = 1;
         b1.mIsNegative = 1;
 
-        BigInt t = a1.add(a1, b1);
-        t.mIsNegative = a.mIsNegative;
+        BigInt temp = a1.add(a1, b1);
+        temp.mIsNegative = a.mIsNegative;
 
-        return t;
+        return temp;
     }
     else
     {
-        BigInt a1, b1;
-        if (a.mIsNegative == 1 && b.mIsNegative == -1)
-        {
-            a1 = a;
-            b1 = b;
-        }
-        else
+        BigInt a1 = a;
+        BigInt b1 = b;
+        if (!(a.mIsNegative == 1 && b.mIsNegative == -1))
         {
             a1 = b;
             b1 = a;
@@ -304,12 +300,13 @@ BigInt operator+(const BigInt &a, const BigInt &b)
         }
         else
         {
-            BigInt tA = a1, tB = b1;
+            BigInt tempA = a1;
+            BigInt tempB = b1;
 
-            tA.mIsNegative = b1.mIsNegative;
-            tB.mIsNegative = a1.mIsNegative;
+            tempA.mIsNegative = b1.mIsNegative;
+            tempB.mIsNegative = a1.mIsNegative;
 
-            BigInt res = a1.add(tB, tA);
+            BigInt res = a1.add(tempB, tempA);
             res.mIsNegative = res.mIsNegative * (-1);
 
             return res;
@@ -391,50 +388,45 @@ BigInt operator*(const BigInt &a, const BigInt &b)
 
 BigInt operator/(const BigInt &a, const BigInt &b)
 {
-    std::string value = "", ans = "0";
+    std::string value = "";
+    std::string res = "0";
 
-    BigInt divisor = b;
-    divisor.mIsNegative = 1;
+    BigInt div = b;
+    div.mIsNegative = 1;
 
-    if (divisor.mDigits[0] == 0)
-    {
+    if (div.mDigits[0] == 0)
         throw std::runtime_error("Devision by zero");
-    }
 
-    int i = 0, end = sz(a.mDigits);
-    for (; i < end && i < sz(b.mDigits); i++) // init of dividor
-    {
-        value += std::to_string(a.mDigits[i]);
-    }
-    --i;
-    while (i < end)
+    int ind = 0, end = sz(a.mDigits);
+    for (; ind < end && ind < sz(b.mDigits); ind++)
+        value += std::to_string(a.mDigits[ind]);
+
+    ind--;
+    while (ind < end)
     {
         BigInt temp(value);
 
         int q = 0;
-        while (temp >= divisor) // number of divents
+        while (temp >= div)
         {
-            temp -= divisor;
+            temp -= div;
             q++;
         }
-        ans += std::to_string(q);
+        res += std::to_string(q);
 
         value = "";
-        for (int j = 0; j < sz(temp.mDigits); j++) // rest remainder from substraction
-        {
+        for (int j = 0; j < sz(temp.mDigits); j++)
             value += std::to_string(temp.mDigits[j]);
-        }
-        ++i;
-        if (i < end)
-            value += std::to_string(a.mDigits[i]);
+
+        ind++;
+        if (ind < end)
+            value += std::to_string(a.mDigits[ind]);
     }
 
-    BigInt result(ans);
+    BigInt result(res);
 
     if (a.mIsNegative != b.mIsNegative)
-    {
         result.mIsNegative = -1;
-    }
 
     return result;
 }
