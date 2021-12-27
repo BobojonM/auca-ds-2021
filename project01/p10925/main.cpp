@@ -17,7 +17,7 @@ int main()
             res += BigInt(s);
         }
 
-        cout << "Bill #" << cases << " costs " << res << ": each friend should pay " << res / friends << "\n\n";
+        cout << "Bill #" << cases << " costs " << res << ": each friend should pay " << (res / friends) << "\n\n";
 
         cases++;
     }
