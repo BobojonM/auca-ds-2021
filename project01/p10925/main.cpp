@@ -1,4 +1,5 @@
 #include "../BigInt/BigInt.hpp"
+
 using namespace std;
 
 int main()
@@ -14,7 +15,7 @@ int main()
         {
             string s;
             cin >> s;
-            res += BigInt(s);
+            res = res + BigInt(s);
         }
 
         cout << "Bill #" << cases << " costs " << res << ": each friend should pay " << (res / friends) << "\n\n";
