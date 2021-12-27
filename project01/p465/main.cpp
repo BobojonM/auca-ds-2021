@@ -16,9 +16,9 @@ int main()
 
         cout << s1 << " " << cmd << " " << s2 << "\n";
 
-        if (a >= mx)
+        if (a > mx)
             cout << "first number too big\n";
-        if (b >= mx)
+        if (b > mx)
             cout << "second number too big\n";
 
         BigInt res;
@@ -27,7 +27,7 @@ int main()
         else
             res = (a * b);
 
-        if (res >= mx)
+        if (res > mx)
             cout << "result too big\n";
     }
 }
