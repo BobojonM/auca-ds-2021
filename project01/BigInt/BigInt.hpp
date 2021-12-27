@@ -43,6 +43,50 @@ class BigInt
     friend BigInt operator%(const BigInt &a, const BigInt &b);
     friend BigInt operator/(const BigInt &a, const BigInt &b);
     friend bool operator<(const BigInt &a, const BigInt &b);
+    friend BigInt abs(const BigInt &a);
+
+    static BigInt add(const BigInt &a, const BigInt &b)
+    {
+        auto i = a.mDigits.rbegin();
+        auto j = b.mDigits.rbegin();
+
+        std::string out = "";
+
+        int carry = 0;
+        while (i != a.mDigits.rend() || j != b.mDigits.rend())
+        {
+            int sum = carry;
+            if (i != a.mDigits.rend())
+            {
+                sum += (*i * a.mIsNegative);
+                i++;
+            }
+            if (j != b.mDigits.rend())
+            {
+                sum += (*j * b.mIsNegative);
+                j++;
+            }
+            if (sum < 0)
+            {
+                sum += 10;
+                carry = -1;
+                out += std::to_string(sum % 10);
+                continue;
+            }
+            else
+            {
+                carry = sum / 10;
+                out += std::to_string(sum % 10);
+            }
+        }
+        if (carry)
+        {
+            out += std::to_string(carry);
+        }
+        std::reverse(out.begin(), out.end());
+
+        return BigInt(out);
+    }
 
 public:
     BigInt()
@@ -115,38 +159,6 @@ public:
     }
 };
 
-BigInt add(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
-{
-    std::vector<int> rDigits;
-
-    int d = 0;
-    for (int i = 1; i <= bl; i++)
-    {
-        int sum = aDigits[al - i] + bDigits[bl - i];
-        rDigits.push_back((sum + d) % 10);
-        d = (sum + d) / 10;
-    }
-
-    int d2 = 0;
-    for (int i = bl + 1; i <= al; i++)
-    {
-        int sum = aDigits[al - i] + d;
-        rDigits.push_back((sum + d2) % 10);
-        d2 = (sum + d2) / 10;
-        d = 0;
-    }
-
-    rDigits.push_back(d2);
-
-    std::ostringstream sout;
-    for (int i = rDigits.size() - 1; i > -1; i--)
-    {
-        sout << rDigits[i];
-    }
-
-    return BigInt(sout.str());
-}
-
 BigInt mul(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
 {
     std::vector<int> rDigits(al + bl);
@@ -178,230 +190,6 @@ BigInt mul(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
     //std::cout << "\n";
     return BigInt(sout.str());
 }
-
-BigInt sub(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
-{
-    std::vector<int> rDigits;
-
-    int d = 0;
-    for (int i = 1; i <= bl; i++)
-    {
-        int sum = (aDigits[al - i] + d) - bDigits[bl - i];
-        d = 0;
-        if (sum < 0)
-        {
-            d = -1;
-            sum = 10 + sum;
-        }
-        rDigits.push_back(sum);
-    }
-
-    int d2 = 0;
-    for (int i = bl + 1; i <= al; i++)
-    {
-        int sum = aDigits[al - i] + d + d2;
-        d2 = 0;
-        if (sum < 0)
-        {
-            d2 = -1;
-            sum = 10 + sum;
-        }
-        rDigits.push_back(sum);
-        d = 0;
-    }
-
-    std::ostringstream sout;
-    for (int i = rDigits.size() - 1; i > -1; i--)
-    {
-        sout << rDigits[i];
-    }
-
-    return BigInt(sout.str());
-}
-
-bool bigger(const BigInt a, int al, const BigInt b, int bl)
-{
-    std::vector<int> aDigits = a.digits();
-    std::vector<int> bDigits = b.digits();
-
-    if (al > bl)
-        return true;
-    else if (al < bl)
-        return false;
-    else
-    {
-        int i = al;
-        while (i > 0)
-        {
-            if (aDigits[i - 1] > bDigits[i - 1])
-                return true;
-            else if (aDigits[i - 1] < bDigits[i - 1])
-                return false;
-            i--;
-        }
-
-        if (a.isNegative())
-            return false;
-    }
-
-    return true;
-}
-
-BigInt operator+(const BigInt &a, const BigInt &b)
-{
-    BigInt r;
-    int al = a.size();
-    int bl = b.size();
-    if (bigger(a, al, b, bl))
-    {
-        if (a.isNegative() and b.isNegative())
-        {
-            r = add(a.digits(), al, b.digits(), bl);
-        }
-        else if (a.isNegative() || b.isNegative())
-        {
-            r = sub(a.digits(), al, b.digits(), bl);
-            if (a.isNegative())
-            {
-                r.mIsNegative = -1;
-                //r.setSighn(true);
-            }
-        }
-        else
-            r = add(a.digits(), al, b.digits(), bl);
-    }
-    else
-    {
-        if (b.isNegative() and a.isNegative())
-        {
-            r = add(b.digits(), bl, a.digits(), al);
-        }
-        else if (b.isNegative() || a.isNegative())
-        {
-            r = sub(b.digits(), bl, a.digits(), al);
-            if (b.isNegative())
-            {
-                r.mIsNegative = -1;
-                //r.setSighn(true);
-            }
-        }
-        else
-        {
-            r = add(b.digits(), bl, a.digits(), al);
-        }
-    }
-    return r;
-}
-
-BigInt operator*(const BigInt &a, const BigInt &b)
-{
-    BigInt r;
-
-    int al = a.size();
-    int bl = b.size();
-
-    r = mul(a.digits(), al, b.digits(), bl);
-
-    if ((a.isNegative() || b.isNegative()) && !(a.isNegative() && b.isNegative()))
-    {
-        r.mIsNegative = -1;
-        //r.setSighn(true);
-    }
-
-    return r;
-}
-
-BigInt operator-(const BigInt &a, const BigInt &b)
-{
-    BigInt r;
-    int al = a.size();
-    int bl = b.size();
-    if (bigger(a, al, b, bl))
-    {
-        if (a.isNegative() and b.isNegative())
-        {
-            r = sub(a.digits(), al, b.digits(), bl);
-            r.mIsNegative = -1;
-            //r.setSighn(true);
-        }
-        else if (a.isNegative() || b.isNegative())
-        {
-            r = add(a.digits(), al, b.digits(), bl);
-            if (a.isNegative())
-            {
-                r.mIsNegative = -1;
-                //r.setSighn(true);
-            }
-        }
-        else
-            r = sub(a.digits(), al, b.digits(), bl);
-    }
-    else
-    {
-        if (b.isNegative() and a.isNegative())
-        {
-            r = sub(b.digits(), bl, a.digits(), al);
-            r.mIsNegative = -1;
-            //r.setSighn(true);
-        }
-        else if (b.isNegative() || a.isNegative())
-        {
-            r = add(b.digits(), bl, a.digits(), al);
-            if (b.isNegative())
-            {
-                r.mIsNegative = -1;
-                //r.setSighn(true);
-            }
-        }
-        else
-        {
-            r = sub(b.digits(), bl, a.digits(), al);
-            r.mIsNegative = -1;
-            //r.setSighn(true);
-        }
-    }
-
-    return r;
-}
-
-bool operator==(const BigInt &a, const BigInt &b)
-{
-    if (a.isNegative() == b.isNegative() && a.size() == b.size())
-    {
-        std::vector<int> aDigits = a.digits();
-        std::vector<int> bDigits = b.digits();
-        for (int i = 0; i < a.size(); i++)
-        {
-            if (aDigits[i] != bDigits[i])
-                return false;
-        }
-        return true;
-    }
-
-    return false;
-}
-
-// bool operator>(const BigInt &a, const BigInt &b)
-// {
-//     if (!a.isNegative() && b.isNegative())
-//         return true;
-//     else if (a.isNegative() && !b.isNegative())
-//         return false;
-//     else if (a.isNegative() && b.isNegative())
-//         return !bigger(a, a.size(), b, b.size());
-//     return (bigger(a, a.size(), b, b.size()) && !(a == b));
-// }
-
-// bool operator<(const BigInt &a, const BigInt &b)
-// {
-//     if (!a.isNegative() && b.isNegative())
-//         return false;
-//     else if (a.isNegative() && !b.isNegative())
-//         return true;
-//     else if (a.isNegative() && b.isNegative())
-//         return bigger(a, a.size(), b, b.size());
-//     return !bigger(a, a.size(), b, b.size());
-// }
 
 bool operator<(const BigInt &a, const BigInt &b)
 {
@@ -454,20 +242,14 @@ bool operator<(const BigInt &a, const BigInt &b)
     }
     return 0;
 }
-
 bool operator>(const BigInt &a, const BigInt &b)
 {
     return b < a;
 }
 
-bool operator>=(const BigInt &a, const BigInt &b)
+bool operator==(const BigInt &a, const BigInt &b)
 {
-    return !(a < b);
-}
-
-bool operator<=(const BigInt &a, const BigInt &b)
-{
-    return !(a > b);
+    return (!(a < b) && !(b < a));
 }
 
 bool operator!=(const BigInt &a, const BigInt &b)
@@ -475,17 +257,86 @@ bool operator!=(const BigInt &a, const BigInt &b)
     return !(a == b);
 }
 
-// BigInt operator%(const BigInt &a, const BigInt &b)
-// {
-//     BigInt r = a - ((a / b) * b);
+bool operator<=(const BigInt &a, const BigInt &b)
+{
+    return (a < b || a == b);
+}
 
-//     if (a.isNegative())
-//     {
-//         r.setSighn(true);
-//     }
+bool operator>=(const BigInt &a, const BigInt &b)
+{
+    return (b < a || b == a);
+}
 
-//     return r;
-// }
+BigInt operator+(const BigInt &a, const BigInt &b)
+{
+    if (a.mIsNegative == b.mIsNegative) // if both are negative/ positive, just add
+    {
+        BigInt a1 = a, b1 = b;
+
+        a1.mIsNegative = 1;
+        b1.mIsNegative = 1;
+
+        BigInt t = a1.add(a1, b1);
+        t.mIsNegative = a.mIsNegative;
+
+        return t;
+    }
+    else
+    {
+        BigInt a1, b1;
+        if (a.mIsNegative == 1 && b.mIsNegative == -1)
+        {
+            a1 = a;
+            b1 = b;
+        }
+        else
+        {
+            a1 = b;
+            b1 = a;
+        }
+
+        if (compare(a1.mDigits, b1.mDigits))
+        {
+            return a.add(a1, b1);
+        }
+        else
+        {
+            BigInt tA = a1, tB = b1;
+
+            tA.mIsNegative = b1.mIsNegative;
+            tB.mIsNegative = a1.mIsNegative;
+
+            BigInt res = a1.add(tB, tA);
+            res.mIsNegative = res.mIsNegative * (-1);
+
+            return res;
+        }
+    }
+}
+BigInt abs(const BigInt &a)
+{
+    BigInt absA = a;
+    absA.mIsNegative = 1;
+    return absA;
+}
+
+BigInt operator-(const BigInt &a, const BigInt &b)
+{
+    BigInt b1 = b;
+    b1.mIsNegative = -b1.mIsNegative;
+
+    return (a + b1);
+}
+
+void operator+=(BigInt &a, const BigInt &b)
+{
+    a = a + b;
+}
+
+void operator-=(BigInt &a, const BigInt &b)
+{
+    a = a - b;
+}
 
 std::istream &operator>>(std::istream &sinp, BigInt &b)
 {
@@ -516,14 +367,23 @@ std::ostream &operator<<(std::ostream &sout, const BigInt &b)
     return sout;
 }
 
-void operator+=(BigInt &a, const BigInt &b)
+BigInt operator*(const BigInt &a, const BigInt &b)
 {
-    a = a + b;
-}
+    BigInt r;
 
-void operator-=(BigInt &a, const BigInt &b)
-{
-    a = a - b;
+    int al = a.size();
+    int bl = b.size();
+
+    r = mul(a.digits(), al, b.digits(), bl);
+
+    if ((a.isNegative() || b.isNegative()) && !(a.isNegative() && b.isNegative()))
+    {
+        if (b != BigInt(0) && a != BigInt(0))
+            r.mIsNegative = -1;
+        //r.setSighn(true);
+    }
+
+    return r;
 }
 
 BigInt operator/(const BigInt &a, const BigInt &b)
@@ -531,38 +391,15 @@ BigInt operator/(const BigInt &a, const BigInt &b)
     std::string value = "", ans = "0";
 
     BigInt divisor = b;
-    divisor.mIsNegative = false;
-    if (a.mIsNegative || b.mIsNegative)
-        divisor.mIsNegative = true;
-    if (a.mIsNegative == b.mIsNegative)
-        divisor.mIsNegative = false;
+    divisor.mIsNegative = 1;
 
     if (divisor.mDigits[0] == 0)
     {
         throw std::runtime_error("Devision by zero");
     }
-    if (divisor.size() == 1)
-    {
-        if (divisor.mDigits[0] == 1)
-        {
-            BigInt res = a;
-            res.mIsNegative = divisor.mIsNegative;
-            return res;
-        }
-
-        //throw std::runtime_error("Devision by zero");
-    }
-    if (a == b)
-    {
-        BigInt res(1);
-        res.mIsNegative = divisor.mIsNegative;
-        return res;
-
-        //throw std::runtime_error("Devision by zero");
-    }
 
     int i = 0, end = sz(a.mDigits);
-    for (; i < end && i < sz(b.mDigits); i++)
+    for (; i < end && i < sz(b.mDigits); i++) // init of dividor
     {
         value += std::to_string(a.mDigits[i]);
     }
@@ -572,7 +409,7 @@ BigInt operator/(const BigInt &a, const BigInt &b)
         BigInt temp(value);
 
         int q = 0;
-        while (temp >= divisor)
+        while (temp >= divisor) // number of divents
         {
             temp -= divisor;
             q++;
@@ -580,7 +417,7 @@ BigInt operator/(const BigInt &a, const BigInt &b)
         ans += std::to_string(q);
 
         value = "";
-        for (int j = 0; j < sz(temp.mDigits); j++)
+        for (int j = 0; j < sz(temp.mDigits); j++) // rest remainder from substraction
         {
             value += std::to_string(temp.mDigits[j]);
         }
@@ -591,6 +428,10 @@ BigInt operator/(const BigInt &a, const BigInt &b)
 
     BigInt result(ans);
 
-    result.mIsNegative = divisor.mIsNegative;
+    if (a.mIsNegative != b.mIsNegative)
+    {
+        result.mIsNegative = -1;
+    }
+
     return result;
 }
