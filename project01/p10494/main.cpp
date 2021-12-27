@@ -8,13 +8,17 @@ int main()
 
     while (cin >> a >> cmd >> b)
     {
+
+        BigInt res;
         if (cmd == "/")
         {
-            cout << BigInt(a) / BigInt(b) << "\n";
+            res = BigInt(a) / BigInt(b);
         }
         else
         {
-            cout << BigInt(a) % BigInt(b) << "\n";
+            res = BigInt(a) % BigInt(b);
         }
+
+        cout << res << "\n";
     }
 }
