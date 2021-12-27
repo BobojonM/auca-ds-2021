@@ -8,6 +8,7 @@ class BigInt
 {
     friend BigInt operator+(const BigInt &a, const BigInt &b);
     friend BigInt operator-(const BigInt &a, const BigInt &b);
+    friend BigInt operator*(const BigInt &a, const BigInt &b);
     std::vector<int> mDigits;
     bool mIsNegative;
 
@@ -52,10 +53,11 @@ public:
             throw std::runtime_error("Incorrect input ");
         }
 
+        bool neg = false;
         std::string n = m;
         if (n[0] == '+' || n[0] == '-')
         {
-            mIsNegative = (n[0] == '-' ? true : false);
+            neg = (n[0] == '-' ? true : false);
             n = n.substr(1);
         }
 
@@ -74,6 +76,21 @@ public:
         for (int i = 0; mDigits[i] == 0 && mDigits.size() > 1;)
         {
             mDigits.erase(mDigits.begin() + i);
+        }
+
+        setSighn(neg);
+    }
+
+    void setSighn(bool s)
+    {
+        mIsNegative = s;
+        if (mDigits.size() > 0)
+        {
+            if (mDigits[0] == 0)
+            {
+                //std::cout << "AAAAAAAA\n";
+                mIsNegative = false;
+            }
         }
     }
 };
@@ -107,6 +124,38 @@ BigInt add(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
         sout << rDigits[i];
     }
 
+    return BigInt(sout.str());
+}
+
+BigInt mul(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
+{
+    std::vector<int> rDigits(al + bl);
+
+    for (int i = 1; i <= al; i++)
+    {
+        int d = 0;
+        for (int j = 1; j <= bl; j++)
+        {
+            int mul = aDigits[al - i] * bDigits[bl - j];
+            int oldr = rDigits[(j - 1) + (i - 1)];
+            rDigits[(j - 1) + (i - 1)] = (oldr + mul + d) % 10;
+            //std::cout << d << "\n";
+            d = (oldr + mul + d) / 10;
+            //std::cout << rDigits[(j - 1) + (i - 1)] << " " << d << "\n";
+        }
+
+        if (d)
+            rDigits[bl + (i - 1)] = (rDigits[bl + (i - 1)] + d) % 10;
+    }
+
+    std::ostringstream sout;
+    for (int i = rDigits.size() - 1; i > -1; i--)
+    {
+        sout << rDigits[i];
+    }
+
+    //std::cout << sout.str() << "\n";
+    //std::cout << "\n";
     return BigInt(sout.str());
 }
 
@@ -195,7 +244,7 @@ BigInt operator+(const BigInt &a, const BigInt &b)
         {
             r = sub(a.digits(), al, b.digits(), bl);
             if (a.isNegative())
-                r.mIsNegative = true;
+                r.setSighn(true);
         }
         else
             r = add(a.digits(), al, b.digits(), bl);
@@ -210,13 +259,31 @@ BigInt operator+(const BigInt &a, const BigInt &b)
         {
             r = sub(b.digits(), bl, a.digits(), al);
             if (b.isNegative())
-                r.mIsNegative = true;
+                r.setSighn(true);
         }
         else
         {
             r = add(b.digits(), bl, a.digits(), al);
         }
     }
+
+    return r;
+}
+
+BigInt operator*(const BigInt &a, const BigInt &b)
+{
+    BigInt r;
+
+    int al = a.size();
+    int bl = b.size();
+
+    if ((a.isNegative() || b.isNegative()) && !(a.isNegative() && b.isNegative()))
+    {
+        r = mul(a.digits(), al, b.digits(), bl);
+        r.setSighn(true);
+    }
+    else
+        r = mul(a.digits(), al, b.digits(), bl);
 
     return r;
 }
@@ -233,13 +300,13 @@ BigInt operator-(const BigInt &a, const BigInt &b)
         if (a.isNegative() and b.isNegative())
         {
             r = sub(a.digits(), al, b.digits(), bl);
-            r.mIsNegative = true;
+            r.setSighn(true);
         }
         else if (a.isNegative() || b.isNegative())
         {
             r = add(a.digits(), al, b.digits(), bl);
             if (a.isNegative())
-                r.mIsNegative = true;
+                r.setSighn(true);
         }
         else
             r = sub(a.digits(), al, b.digits(), bl);
@@ -249,18 +316,18 @@ BigInt operator-(const BigInt &a, const BigInt &b)
         if (b.isNegative() and a.isNegative())
         {
             r = sub(b.digits(), bl, a.digits(), al);
-            r.mIsNegative = true;
+            r.setSighn(true);
         }
         else if (b.isNegative() || a.isNegative())
         {
             r = add(b.digits(), bl, a.digits(), al);
             if (b.isNegative())
-                r.mIsNegative = true;
+                r.setSighn(true);
         }
         else
         {
             r = sub(b.digits(), bl, a.digits(), al);
-            r.mIsNegative = true;
+            r.setSighn(true);
         }
     }
 
