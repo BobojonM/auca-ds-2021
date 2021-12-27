@@ -280,6 +280,68 @@ TEST_CASE("bigInt: operator *")
     }
 }
 
+TEST_CASE("bigInt: operator /")
+{
+    ostringstream sout;
+    SUBCASE("Test with 123 / 123")
+    {
+        BigInt a(123);
+        BigInt b(123);
+
+        sout << a / b;
+
+        REQUIRE(sout.str() == "1");
+    }
+
+    SUBCASE("Test with 9999 / 1")
+    {
+        BigInt a(9999);
+        BigInt b(1);
+
+        sout << a / b;
+
+        REQUIRE(sout.str() == "9999");
+    }
+    SUBCASE("Test with 9999 / 999")
+    {
+        BigInt a(9999);
+        BigInt b(999);
+
+        sout << a / b;
+
+        REQUIRE(sout.str() == "10");
+    }
+    SUBCASE("Test with 9999 / -9999")
+    {
+        BigInt a(9999);
+        BigInt b("-9999");
+
+        sout << a / b;
+
+        REQUIRE(sout.str() == "-1");
+    }
+
+    //    SUBCASE("Test with 1234 / 65")
+    // {
+    //     BigInt a(1234);
+    //     BigInt b(65);
+
+    //     sout << a / b;
+
+    //     REQUIRE(sout.str() == "18");
+    // }
+
+    // SUBCASE("Test with 1234 / -65")
+    // {
+    //     BigInt a(1234);
+    //     BigInt b(-65);
+
+    //     sout << a / b;
+
+    //     REQUIRE(sout.str() == "-19");
+    // }
+}
+
 TEST_CASE("bigInt: operator -")
 {
     ostringstream sout;

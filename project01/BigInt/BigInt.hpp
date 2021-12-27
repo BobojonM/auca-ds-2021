@@ -4,29 +4,61 @@
 #include <iosfwd>
 #include <string>
 
+template <typename C>
+int sz(const C &c) { return static_cast<int>(c.size()); }
+
+template <typename C>
+bool compare(C a, C b)
+{
+    int res = 1, i = 0, j = 0;
+
+    if (sz(a) > sz(b))
+    {
+        return res;
+    }
+    if (sz(a) < sz(b))
+    {
+        return 0;
+    }
+
+    for (; i < sz(a) && j < sz(b); i++, j++)
+    {
+        if (a[i] < b[i])
+        {
+            res = 0;
+            break;
+        }
+    }
+    return res;
+}
+
 class BigInt
 {
+    std::vector<int> mDigits;
+    int mIsNegative;
+
     friend BigInt operator+(const BigInt &a, const BigInt &b);
     friend BigInt operator-(const BigInt &a, const BigInt &b);
     friend BigInt operator*(const BigInt &a, const BigInt &b);
-    std::vector<int> mDigits;
-    bool mIsNegative;
+    friend BigInt operator%(const BigInt &a, const BigInt &b);
+    friend BigInt operator/(const BigInt &a, const BigInt &b);
+    friend bool operator<(const BigInt &a, const BigInt &b);
 
 public:
     BigInt()
-        : mIsNegative(false)
+        : mIsNegative(1)
     {
         mDigits.push_back(0);
     }
 
     BigInt(const std::string &n)
-        : mIsNegative(false)
+        : mIsNegative(1)
     {
         parseString(n);
     }
 
     BigInt(const long long &n)
-        : mIsNegative(false)
+        : mIsNegative(1)
     {
         parseString(std::to_string(n));
     }
@@ -36,9 +68,9 @@ public:
         return mDigits;
     }
 
-    const bool &isNegative() const
+    bool isNegative() const
     {
-        return mIsNegative;
+        return (mIsNegative == -1 ? true : false);
     }
 
     int size() const
@@ -53,11 +85,12 @@ public:
             throw std::runtime_error("Incorrect input ");
         }
 
-        bool neg = false;
+        //bool neg = false;
         std::string n = m;
         if (n[0] == '+' || n[0] == '-')
         {
-            neg = (n[0] == '-' ? true : false);
+            mIsNegative = (n[0] == '-' ? -1 : 1);
+            //std::cout << mIsNegative << "\n";
             n = n.substr(1);
         }
 
@@ -78,20 +111,7 @@ public:
             mDigits.erase(mDigits.begin() + i);
         }
 
-        setSighn(neg);
-    }
-
-    void setSighn(bool s)
-    {
-        mIsNegative = s;
-        if (mDigits.size() > 0)
-        {
-            if (mDigits[0] == 0)
-            {
-                //std::cout << "AAAAAAAA\n";
-                mIsNegative = false;
-            }
-        }
+        //mIsNegative = neg;
     }
 };
 
@@ -230,10 +250,8 @@ bool bigger(const BigInt a, int al, const BigInt b, int bl)
 BigInt operator+(const BigInt &a, const BigInt &b)
 {
     BigInt r;
-
     int al = a.size();
     int bl = b.size();
-
     if (bigger(a, al, b, bl))
     {
         if (a.isNegative() and b.isNegative())
@@ -244,7 +262,10 @@ BigInt operator+(const BigInt &a, const BigInt &b)
         {
             r = sub(a.digits(), al, b.digits(), bl);
             if (a.isNegative())
-                r.setSighn(true);
+            {
+                r.mIsNegative = -1;
+                //r.setSighn(true);
+            }
         }
         else
             r = add(a.digits(), al, b.digits(), bl);
@@ -259,14 +280,16 @@ BigInt operator+(const BigInt &a, const BigInt &b)
         {
             r = sub(b.digits(), bl, a.digits(), al);
             if (b.isNegative())
-                r.setSighn(true);
+            {
+                r.mIsNegative = -1;
+                //r.setSighn(true);
+            }
         }
         else
         {
             r = add(b.digits(), bl, a.digits(), al);
         }
     }
-
     return r;
 }
 
@@ -277,13 +300,13 @@ BigInt operator*(const BigInt &a, const BigInt &b)
     int al = a.size();
     int bl = b.size();
 
+    r = mul(a.digits(), al, b.digits(), bl);
+
     if ((a.isNegative() || b.isNegative()) && !(a.isNegative() && b.isNegative()))
     {
-        r = mul(a.digits(), al, b.digits(), bl);
-        r.setSighn(true);
+        r.mIsNegative = -1;
+        //r.setSighn(true);
     }
-    else
-        r = mul(a.digits(), al, b.digits(), bl);
 
     return r;
 }
@@ -291,22 +314,24 @@ BigInt operator*(const BigInt &a, const BigInt &b)
 BigInt operator-(const BigInt &a, const BigInt &b)
 {
     BigInt r;
-
     int al = a.size();
     int bl = b.size();
-
     if (bigger(a, al, b, bl))
     {
         if (a.isNegative() and b.isNegative())
         {
             r = sub(a.digits(), al, b.digits(), bl);
-            r.setSighn(true);
+            r.mIsNegative = -1;
+            //r.setSighn(true);
         }
         else if (a.isNegative() || b.isNegative())
         {
             r = add(a.digits(), al, b.digits(), bl);
             if (a.isNegative())
-                r.setSighn(true);
+            {
+                r.mIsNegative = -1;
+                //r.setSighn(true);
+            }
         }
         else
             r = sub(a.digits(), al, b.digits(), bl);
@@ -316,18 +341,23 @@ BigInt operator-(const BigInt &a, const BigInt &b)
         if (b.isNegative() and a.isNegative())
         {
             r = sub(b.digits(), bl, a.digits(), al);
-            r.setSighn(true);
+            r.mIsNegative = -1;
+            //r.setSighn(true);
         }
         else if (b.isNegative() || a.isNegative())
         {
             r = add(b.digits(), bl, a.digits(), al);
             if (b.isNegative())
-                r.setSighn(true);
+            {
+                r.mIsNegative = -1;
+                //r.setSighn(true);
+            }
         }
         else
         {
             r = sub(b.digits(), bl, a.digits(), al);
-            r.setSighn(true);
+            r.mIsNegative = -1;
+            //r.setSighn(true);
         }
     }
 
@@ -351,26 +381,83 @@ bool operator==(const BigInt &a, const BigInt &b)
     return false;
 }
 
-bool operator>(const BigInt &a, const BigInt &b)
-{
-    if (!a.isNegative() && b.isNegative())
-        return true;
-    else if (a.isNegative() && !b.isNegative())
-        return false;
-    else if (a.isNegative() && b.isNegative())
-        return !bigger(a, a.size(), b, b.size());
-    return (bigger(a, a.size(), b, b.size()) && !(a == b));
-}
+// bool operator>(const BigInt &a, const BigInt &b)
+// {
+//     if (!a.isNegative() && b.isNegative())
+//         return true;
+//     else if (a.isNegative() && !b.isNegative())
+//         return false;
+//     else if (a.isNegative() && b.isNegative())
+//         return !bigger(a, a.size(), b, b.size());
+//     return (bigger(a, a.size(), b, b.size()) && !(a == b));
+// }
+
+// bool operator<(const BigInt &a, const BigInt &b)
+// {
+//     if (!a.isNegative() && b.isNegative())
+//         return false;
+//     else if (a.isNegative() && !b.isNegative())
+//         return true;
+//     else if (a.isNegative() && b.isNegative())
+//         return bigger(a, a.size(), b, b.size());
+//     return !bigger(a, a.size(), b, b.size());
+// }
 
 bool operator<(const BigInt &a, const BigInt &b)
 {
-    if (!a.isNegative() && b.isNegative())
-        return false;
-    else if (a.isNegative() && !b.isNegative())
-        return true;
-    else if (a.isNegative() && b.isNegative())
-        return bigger(a, a.size(), b, b.size());
-    return !bigger(a, a.size(), b, b.size());
+    if (a.mIsNegative < b.mIsNegative)
+    {
+        return 1;
+    }
+    else if (a.mIsNegative > b.mIsNegative)
+    {
+        return 0;
+    }
+
+    if (a.mIsNegative == 1 && b.mIsNegative == 1)
+    {
+        if (sz(a.mDigits) < sz(b.mDigits))
+        {
+            return 1;
+        }
+        else if (sz(a.mDigits) > sz(b.mDigits))
+        {
+            return 0;
+        }
+    }
+
+    if (a.mIsNegative == -1 && b.mIsNegative == -1)
+    {
+        if (sz(a.mDigits) < sz(b.mDigits))
+        {
+            return 0;
+        }
+        else if (sz(a.mDigits) > sz(b.mDigits))
+        {
+            return 1;
+        }
+    }
+
+    for (int i = 0; i < sz(a.mDigits) && i < sz(b.mDigits); i++)
+    {
+        if (a.mDigits[i] != b.mDigits[i])
+        {
+            if (a.mIsNegative == 1 && b.mIsNegative == 1)
+            {
+                return a.mDigits[i] < b.mDigits[i];
+            }
+            else
+            {
+                return !(a.mDigits[i] < b.mDigits[i]);
+            }
+        }
+    }
+    return 0;
+}
+
+bool operator>(const BigInt &a, const BigInt &b)
+{
+    return b < a;
 }
 
 bool operator>=(const BigInt &a, const BigInt &b)
@@ -387,6 +474,18 @@ bool operator!=(const BigInt &a, const BigInt &b)
 {
     return !(a == b);
 }
+
+// BigInt operator%(const BigInt &a, const BigInt &b)
+// {
+//     BigInt r = a - ((a / b) * b);
+
+//     if (a.isNegative())
+//     {
+//         r.setSighn(true);
+//     }
+
+//     return r;
+// }
 
 std::istream &operator>>(std::istream &sinp, BigInt &b)
 {
@@ -415,4 +514,83 @@ std::ostream &operator<<(std::ostream &sout, const BigInt &b)
     }
 
     return sout;
+}
+
+void operator+=(BigInt &a, const BigInt &b)
+{
+    a = a + b;
+}
+
+void operator-=(BigInt &a, const BigInt &b)
+{
+    a = a - b;
+}
+
+BigInt operator/(const BigInt &a, const BigInt &b)
+{
+    std::string value = "", ans = "0";
+
+    BigInt divisor = b;
+    divisor.mIsNegative = false;
+    if (a.mIsNegative || b.mIsNegative)
+        divisor.mIsNegative = true;
+    if (a.mIsNegative == b.mIsNegative)
+        divisor.mIsNegative = false;
+
+    if (divisor.mDigits[0] == 0)
+    {
+        throw std::runtime_error("Devision by zero");
+    }
+    if (divisor.size() == 1)
+    {
+        if (divisor.mDigits[0] == 1)
+        {
+            BigInt res = a;
+            res.mIsNegative = divisor.mIsNegative;
+            return res;
+        }
+
+        //throw std::runtime_error("Devision by zero");
+    }
+    if (a == b)
+    {
+        BigInt res(1);
+        res.mIsNegative = divisor.mIsNegative;
+        return res;
+
+        //throw std::runtime_error("Devision by zero");
+    }
+
+    int i = 0, end = sz(a.mDigits);
+    for (; i < end && i < sz(b.mDigits); i++)
+    {
+        value += std::to_string(a.mDigits[i]);
+    }
+    --i;
+    while (i < end)
+    {
+        BigInt temp(value);
+
+        int q = 0;
+        while (temp >= divisor)
+        {
+            temp -= divisor;
+            q++;
+        }
+        ans += std::to_string(q);
+
+        value = "";
+        for (int j = 0; j < sz(temp.mDigits); j++)
+        {
+            value += std::to_string(temp.mDigits[j]);
+        }
+        ++i;
+        if (i < end)
+            value += std::to_string(a.mDigits[i]);
+    }
+
+    BigInt result(ans);
+
+    result.mIsNegative = divisor.mIsNegative;
+    return result;
 }
