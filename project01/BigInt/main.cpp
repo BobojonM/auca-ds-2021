@@ -321,25 +321,25 @@ TEST_CASE("bigInt: operator /")
         REQUIRE(sout.str() == "-1");
     }
 
-    //    SUBCASE("Test with 1234 / 65")
-    // {
-    //     BigInt a(1234);
-    //     BigInt b(65);
+    SUBCASE("Test with 1234 / 65")
+    {
+        BigInt a(1234);
+        BigInt b(65);
 
-    //     sout << a / b;
+        sout << a / b;
 
-    //     REQUIRE(sout.str() == "18");
-    // }
+        REQUIRE(sout.str() == "18");
+    }
 
-    // SUBCASE("Test with 1234 / -65")
-    // {
-    //     BigInt a(1234);
-    //     BigInt b(-65);
+    SUBCASE("Test with 1234 / -65")
+    {
+        BigInt a(1234);
+        BigInt b(-65);
 
-    //     sout << a / b;
+        sout << a / b;
 
-    //     REQUIRE(sout.str() == "-19");
-    // }
+        REQUIRE(sout.str() == "-18");
+    }
 }
 
 TEST_CASE("bigInt: operator -")

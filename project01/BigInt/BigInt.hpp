@@ -3,6 +3,9 @@
 #include <vector>
 #include <iosfwd>
 #include <string>
+#include <cstdint>
+#include <iostream>
+#include <algorithm>
 
 template <typename C>
 int sz(const C &c) { return static_cast<int>(c.size()); }
@@ -180,15 +183,15 @@ BigInt mul(std::vector<int> aDigits, int al, std::vector<int> bDigits, int bl)
             rDigits[bl + (i - 1)] = (rDigits[bl + (i - 1)] + d) % 10;
     }
 
-    std::ostringstream sout;
+    std::string sout;
     for (int i = rDigits.size() - 1; i > -1; i--)
     {
-        sout << rDigits[i];
+        sout += std::to_string(rDigits[i]);
     }
 
     //std::cout << sout.str() << "\n";
     //std::cout << "\n";
-    return BigInt(sout.str());
+    return BigInt(sout);
 }
 
 bool operator<(const BigInt &a, const BigInt &b)
@@ -434,4 +437,25 @@ BigInt operator/(const BigInt &a, const BigInt &b)
     }
 
     return result;
+}
+
+BigInt operator%(const BigInt &a, const BigInt &b)
+{
+
+    return a - ((a / b) * b);
+}
+
+void operator/=(BigInt &a, const BigInt &b)
+{
+    a = a / b;
+}
+
+void operator*=(BigInt &a, const BigInt &b)
+{
+    a = a * b;
+}
+
+void operator%=(BigInt &a, const BigInt &b)
+{
+    a = a % b;
 }
